@@ -1,0 +1,39 @@
+<div class="grid">
+    <div class="col-12 lg:col-4 xl:col-4">
+        <div class="card mb-0 shadow-3">
+            <div class="text-center">
+                <span class="block text-lg mb-3">Total analizadas</span>
+                <div class="text-900 text-blue-500 font-semibold text-3xl">{{detections![0][0].total_sum}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-4 xl:col-4">
+        <div class="card mb-0 shadow-3">
+            <div class="text-center">
+                <span class="block text-lg mb-3">Positivos</span>
+                <div class="text-900 text-green-500 font-semibold text-3xl">{{detections![0][0].detections}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-4 xl:col-4">
+        <div class="card mb-0 shadow-3">
+            <div class="text-center">
+                <span class="block text-lg mb-3">Falsos positivos</span>
+                <div class="text-900 text-red-500 font-semibold text-3xl">{{detections![0][0].not_detections}}</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 lg:col-12 xl:col-12">
+        <div class="card">
+            <div class="flex justify-content-center flex-wrap mb-4">
+                <p-calendar [(ngModel)]="date" class="text-center"></p-calendar>
+            </div>
+            <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+        </div>
+    </div>
+
+
+</div>
+

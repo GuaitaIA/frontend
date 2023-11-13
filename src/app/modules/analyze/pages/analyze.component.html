@@ -2,7 +2,7 @@
 
 <div *ngIf="activeItem.label == 'Imagenes';else other_tabMenu" class="mt-5">
     <div class="card">
-        <p-fileUpload name="demo[]" (uploadHandler)="onUpload($event)" (onSelect)="onSelect()" [multiple]="true" [customUpload]="true" accept="image/*" maxFileSize="1000000" *ngIf="!analyze">
+        <p-fileUpload name="demo[]" chooseLabel="Escollir" uploadLabel="Pujar" cancelLabel="Cancel·lar" (uploadHandler)="onUpload($event)" (onSelect)="onSelect()" [multiple]="true" [customUpload]="true" accept="image/*" maxFileSize="1000000" *ngIf="!analyze">
             <ng-template pTemplate="content">
                 <!-- <ul *ngIf="uploadedFiles.length">
                     <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>

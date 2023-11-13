@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FileUploadHandlerEvent } from 'primeng/fileupload';
 import { AnalyzeService } from '../services/analyze.service';
 import { MenuItem } from 'primeng/api';
@@ -9,6 +9,7 @@ interface UploadEvent {
 }
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-analyze',
   templateUrl: './analyze.component.html',
   styleUrls: ['./analyze.component.scss']

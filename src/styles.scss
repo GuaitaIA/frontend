@@ -36,3 +36,9 @@ $gutter: 1rem; //for primeflex grid system
     text-align: center !important;
     font-weight: bold;
 }
+
+.p-button.p-button-danger, .p-buttonset.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button {
+    color: #ffffff !important;
+    background: #EF4444 !important;
+    border: 1px solid #EF4444 !important;
+}

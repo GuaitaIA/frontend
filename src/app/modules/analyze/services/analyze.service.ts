@@ -20,9 +20,23 @@ export class AnalyzeService {
 
     formData.append('confianza', '0.5');
     formData.append('iou', '0.5');
-    formData.append('cpu', '1');
+    formData.append('cpu', '0');
 
-    return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios`, formData);
+    return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios/`, formData);
+  }
+
+  uploadStrings(urls: string[]) {
+    const formData = new FormData();
+
+    // unir las urls y separar por comas
+    const urlsString = urls.join(',');
+    formData.append('imagenes_strings', urlsString);
+
+    formData.append('confianza', '0.5');
+    formData.append('iou', '0.5');
+    formData.append('cpu', '0');
+
+    return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios/`, formData);
   }
 
 

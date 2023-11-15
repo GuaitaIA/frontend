@@ -11,7 +11,7 @@
                     <div *ngFor="let result of results">
                         <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
                         <ng-template #other_content>
-                            <img width="100%" src="http://localhost:8000/imagenes/{{result.procesada}}" alt="image" />
+                            <img width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="image" />
                         </ng-template>
                     </div>
                 </div>
@@ -24,5 +24,28 @@
 </div>
 
 <ng-template #other_tabMenu>
-    ok
+    <div class="mt-4 mb-4">
+        <form [formGroup]="formulario" *ngIf="show">
+            <p-button label="Agregar" (click)="agregarUrl()"></p-button>
+            <div formArrayName="urls" class="mt-4 mb-4 mr-4">
+              <div *ngFor="let url of urls.controls; let i = index" class="url-container" class="mt-4">
+                <input type="text" pInputText [formControl]="url" class="mr-4 w-9" />
+                <p-button label="Eliminar" styleClass="p-button-danger" (click)="eliminarUrl(i)"></p-button>
+              </div>
+            </div>
+            <p-button label="Enviar" type="submit" (click)="onSubmit()"></p-button>
+          </form>
+          <div *ngIf="!show">
+            <p-button label="Natejar" (click)="natejar()"></p-button>
+            <div *ngFor="let result of results" class="mt-4">
+                <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
+                <ng-template #other_content>
+                    <img width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="image" />
+                </ng-template>
+            </div>
+        </div>
+        <div class="text-center">
+            <p-progressSpinner *ngIf="analyze"></p-progressSpinner>
+        </div>
+    </div>
 </ng-template>

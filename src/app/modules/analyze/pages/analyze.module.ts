@@ -7,8 +7,10 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AnalyzeService } from '../services/analyze.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { AnalyzeService } from '../services/analyze.service';
     ToastModule,
     ProgressSpinnerModule,
     TabMenuModule,
+    ReactiveFormsModule,
+    InputTextModule,
     AnalyzeRoutingModule
   ],
   providers: [

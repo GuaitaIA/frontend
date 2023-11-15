@@ -12,6 +12,7 @@ import { AuthGuard } from './core/guards/auth.guard';
                 children: [
                     { path: '', loadChildren: () => import('./modules/dashboard/pages/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'analyze', loadChildren: () => import('./modules/analyze/pages/analyze.module').then(m => m.AnalyzeModule) },
+                    { path: 'result', loadChildren: () => import('./modules/result/pages/result.module').then(m => m.ResultModule) },
                 ],
                 canActivate: [AuthGuard]
             }, 

@@ -3,6 +3,8 @@ import { FileUploadHandlerEvent } from 'primeng/fileupload';
 import { AnalyzeService } from '../services/analyze.service';
 import { MenuItem } from 'primeng/api';
 
+import { ReactiveFormsModule, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+
 interface UploadEvent {
   originalEvent: Event;
   files: File[];
@@ -23,8 +25,13 @@ export class AnalyzeComponent {
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 
+  formulario: FormGroup;
+
+  show: boolean = true;
+
   constructor(
-    private analyzeService: AnalyzeService
+    private analyzeService: AnalyzeService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -34,6 +41,10 @@ export class AnalyzeComponent {
     ];
 
     this.activeItem = this.items[0];
+
+    this.formulario = this.fb.group({
+      urls: this.fb.array([ this.fb.control('', Validators.required)]),
+    });
   }
 
     onUpload(event:FileUploadHandlerEvent) {
@@ -60,6 +71,43 @@ export class AnalyzeComponent {
     onActiveItemChange(event: MenuItem) {
       this.activeItem = event;
       console.log(this.activeItem);
+    }
+
+    get urls(): FormArray {
+      return this.formulario.get('urls') as FormArray;
+    }
+
+    agregarUrl() {
+      this.urls.push(this.fb.control('', Validators.required));
+    }
+    
+    eliminarUrl(index: number) {
+      this.urls.removeAt(index);
+    }
+
+    onSubmit() {
+      this.show = false;
+      this.analyze = true;
+      console.log(this.formulario.value);
+      this.analyzeService.uploadStrings(this.formulario.value.urls).subscribe(
+        (response) => {
+          this.results = response;
+          this.analyze = false;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+
+    natejar() {
+      this.show = true;
+      this.formulario.reset();
+      this.urls.clear();
+      this.results = [];
+      this.formulario = this.fb.group({
+        urls: this.fb.array([ this.fb.control('', Validators.required)]),
+      });
     }
     
 }

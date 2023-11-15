@@ -1,0 +1,10 @@
+<div class="grid">
+    <div class="col-12 md:col-6 lg:col-4">
+        <form [formGroup]="formGroup">
+            <p-listbox [options]="cities" formControlName="selectedCity" optionLabel="name" [style]="{ width: '15rem' }"></p-listbox>
+        </form>
+    </div>
+    <div class="col-12 md:col-6 lg:col-8">
+        <div class="text-center p-3 border-round-sm bg-primary font-bold">col-12 md:col-6 lg:col-3</div>
+    </div>
+</div>

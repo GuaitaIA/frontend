@@ -8,6 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { InputTextModule } from 'primeng/inputtext';
+import { ImageModule } from 'primeng/image';
 
 import { AnalyzeService } from '../services/analyze.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     TabMenuModule,
     ReactiveFormsModule,
     InputTextModule,
+    ImageModule,
     AnalyzeRoutingModule
   ],
   providers: [

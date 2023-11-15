@@ -11,7 +11,7 @@
                     <div *ngFor="let result of results">
                         <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
                         <ng-template #other_content>
-                            <img width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="image" />
+                            <p-image width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
                         </ng-template>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
             <div *ngFor="let result of results" class="mt-4">
                 <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
                 <ng-template #other_content>
-                    <img width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="image" />
+                    <p-image width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
                 </ng-template>
             </div>
         </div>

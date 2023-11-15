@@ -1,6 +1,10 @@
-# Sakai
+# GuaitaIA
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4.
+
+## Install project
+
+Run `npm install` for a dev server.
 
 ## Development server
 

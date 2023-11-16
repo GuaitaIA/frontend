@@ -32,8 +32,8 @@ export class AuthInterceptor implements HttpInterceptor {
                     this.authService.logout();
                     return throwError(() => error?.error?.errors.shift());
                 }
-              
-                return throwError(() => error?.error?.errors.shift());
+                if(!environment.production) console.log(error);
+                return throwError(() => error?.error?.detail);
             })
         );
     }

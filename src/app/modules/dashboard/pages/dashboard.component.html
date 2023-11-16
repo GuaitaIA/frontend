@@ -3,7 +3,7 @@
         <div class="card mb-0 shadow-3">
             <div class="text-center">
                 <span class="block text-lg mb-3">Total analizadas</span>
-                <div class="text-900 text-blue-500 font-semibold text-3xl">{{detections![0][0].total_sum}}</div>
+                <div class="text-900 text-blue-500 font-semibold text-3xl" *ngIf="detections[0]">{{detections[0][0].total_sum}}</div>
             </div>
         </div>
     </div>
@@ -11,7 +11,7 @@
         <div class="card mb-0 shadow-3">
             <div class="text-center">
                 <span class="block text-lg mb-3">Positivos</span>
-                <div class="text-900 text-green-500 font-semibold text-3xl">{{detections![0][0].detections}}</div>
+                <div class="text-900 text-green-500 font-semibold text-3xl" *ngIf="detections[0]">{{detections![0][0].detections}}</div>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <div class="card mb-0 shadow-3">
             <div class="text-center">
                 <span class="block text-lg mb-3">Falsos positivos</span>
-                <div class="text-900 text-red-500 font-semibold text-3xl">{{detections![0][0].not_detections}}</div>
+                <div class="text-900 text-red-500 font-semibold text-3xl" *ngIf="detections[0]">{{detections![0][0].not_detections}}</div>
             </div>
         </div>
     </div>

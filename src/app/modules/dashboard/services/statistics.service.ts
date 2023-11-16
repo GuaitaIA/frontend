@@ -12,6 +12,6 @@ export class StatisticsService {
   ) { }
 
   getStatistics() {
-    return this.httpClient.get<any>(`${environment.apiHost}/statistics`);
+    return this.httpClient.get<any>(`${environment.apiHost}/statistics/`);
   }
 }

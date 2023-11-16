@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
 
 <div *ngIf="activeItem.label == 'Imagenes';else other_tabMenu" class="mt-5">
@@ -11,7 +13,7 @@
                     <div *ngFor="let result of results">
                         <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
                         <ng-template #other_content>
-                            <p-image width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
+                            <p-image width="100%" src="http://localhost:8000/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
                         </ng-template>
                     </div>
                 </div>
@@ -40,7 +42,7 @@
             <div *ngFor="let result of results" class="mt-4">
                 <p *ngIf="result.detection == false;else other_content">No hay deteccion</p>
                 <ng-template #other_content>
-                    <p-image width="100%" src="https://guaitaia.capydata.tech/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
+                    <p-image width="100%" src="http://localhost:8000/imagenes/{{result.procesada}}" alt="Image" [preview]="true"></p-image>
                 </ng-template>
             </div>
         </div>

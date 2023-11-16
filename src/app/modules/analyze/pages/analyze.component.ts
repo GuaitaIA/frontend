@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FileUploadHandlerEvent } from 'primeng/fileupload';
 import { AnalyzeService } from '../services/analyze.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 
@@ -31,7 +31,8 @@ export class AnalyzeComponent {
 
   constructor(
     private analyzeService: AnalyzeService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -48,6 +49,7 @@ export class AnalyzeComponent {
   }
 
     onUpload(event:FileUploadHandlerEvent) {
+      console.log('here!!!!!!');
       this.analyze = true;
         for(let file of event.files) {
             this.uploadedFiles.push(file);
@@ -60,6 +62,11 @@ export class AnalyzeComponent {
           },
           (error) => {
             console.log(error);
+            if(error == 'Not allowed at this time') {
+              this.results = [];
+              this.analyze = false;
+              this.showMessage();
+            }
           }
         );
     }
@@ -108,6 +115,10 @@ export class AnalyzeComponent {
       this.formulario = this.fb.group({
         urls: this.fb.array([ this.fb.control('', Validators.required)]),
       });
+    }
+
+    showMessage() {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fora de servei' });
     }
     
 }

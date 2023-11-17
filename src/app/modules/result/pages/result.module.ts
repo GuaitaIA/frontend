@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ListboxModule } from 'primeng/listbox';
 import { ImageModule } from 'primeng/image';
+import { CardModule } from 'primeng/card';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 import { ResultService } from '../services/result.service';
 
@@ -21,6 +23,8 @@ import { ResultService } from '../services/result.service';
     ListboxModule,
     ReactiveFormsModule,
     ImageModule,
+    CardModule,
+    ToggleButtonModule,
     ResultRoutingModule
   ],
   providers: [

@@ -6,3 +6,7 @@
     position: fixed;
     height: calc(100vh - 12rem);
 }
+
+.p-card .p-card-body, .p-card-content{
+    padding: 0 !important;
+}

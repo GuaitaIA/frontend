@@ -7,7 +7,10 @@
     <div class="col-12 md:col-6 lg:col-9">
         <div class="grid">
             <div class="col-6" *ngFor="let image of images">
-                <p-image width="100%" src="http://localhost:8000/imagenes/{{image.url_processed}}" alt="Image" [preview]="true"></p-image>
+                <p-card class="p-0">
+                    <p-image width="100%" src="http://localhost:8000/imagenes/{{image.url_processed}}" alt="Image" [preview]="true"></p-image>
+                    <p-toggleButton onLabel="Positiu" offLabel=" Fals positiu" [style]="{ width: '100%' }"></p-toggleButton>
+                </p-card>
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@
             <p-button label="Agregar" (click)="agregarUrl()"></p-button>
             <div formArrayName="urls" class="mt-4 mb-4 mr-4">
               <div *ngFor="let url of urls.controls; let i = index" class="url-container" class="mt-4">
-                <input type="text" pInputText [formControl]="url" class="mr-4 w-9" />
+                <textarea rows="5" cols="30" pInputTextarea [formControl]="url" class="mr-4 w-9"></textarea>
                 <p-button label="Eliminar" styleClass="p-button-danger" (click)="eliminarUrl(i)"></p-button>
               </div>
             </div>

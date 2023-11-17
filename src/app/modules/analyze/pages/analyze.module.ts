@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { InputTextModule } from 'primeng/inputtext';
 import { ImageModule } from 'primeng/image';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { AnalyzeService } from '../services/analyze.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +28,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     InputTextModule,
     ImageModule,
+    InputTextareaModule,
     AnalyzeRoutingModule
   ],
   providers: [

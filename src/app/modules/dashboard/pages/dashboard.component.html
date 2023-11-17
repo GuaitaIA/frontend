@@ -28,7 +28,7 @@
     <div class="col-12 lg:col-12 xl:col-12">
         <div class="card">
             <div class="flex justify-content-center flex-wrap mb-4">
-                <p-calendar [(ngModel)]="date" class="text-center"></p-calendar>
+                <p-calendar [(ngModel)]="date" (ngModelChange)="onChange($event)" class="text-center"></p-calendar>
             </div>
             <p-chart type="bar" [data]="data" [options]="options"></p-chart>
         </div>

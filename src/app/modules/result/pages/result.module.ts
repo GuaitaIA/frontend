@@ -7,6 +7,9 @@ import { ResultComponent } from './result.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ListboxModule } from 'primeng/listbox';
+import { ImageModule } from 'primeng/image';
+
+import { ResultService } from '../services/result.service';
 
 
 @NgModule({
@@ -17,7 +20,11 @@ import { ListboxModule } from 'primeng/listbox';
     CommonModule,
     ListboxModule,
     ReactiveFormsModule,
+    ImageModule,
     ResultRoutingModule
+  ],
+  providers: [
+    ResultService
   ]
 })
 export class ResultModule { }

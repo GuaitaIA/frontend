@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ResultService } from '../services/result.service';
+
 
 interface City {
   name: string,
@@ -14,37 +16,31 @@ interface City {
 })
 export class ResultComponent {
 
-  cities!: City[];
+  constructor(
+    private resultService: ResultService
+  ) { }
 
-    formGroup!: FormGroup;
+  cities!: City[];
+  public dates = [];
+  public images = [];
+
+  formGroup!: FormGroup;
 
     ngOnInit() {
-        this.cities = [
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' },
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' },
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' },
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' }
-        ];
+      this.resultService.getResultsDates().subscribe((data) => {
+        this.dates = data;
+      });
 
-        this.formGroup = new FormGroup({
-            selectedCity: new FormControl<City | null>(null)
-        });
+      this.formGroup = new FormGroup({
+          selectedCity: new FormControl<City | null>(null)
+      });
     } 
+
+    onChange(newValue) {
+      this.resultService.getResultsByDate(newValue.date).subscribe((data) => {
+        this.images = data;
+        console.log(this.images);
+      });
+    }
 
 }

@@ -1,15 +1,17 @@
 <div class="grid">
-    <div class="col-12 md:col-6 lg:col-3">
+    <div class="col-12 md:col-6 lg:col-2">
         <form [formGroup]="formGroup">
             <p-listbox [options]="dates" formControlName="selectedCity" optionLabel="date" (ngModelChange)="onChange($event)" [style]="{ width: '15rem' }"></p-listbox>
         </form>
     </div>
-    <div class="col-12 md:col-6 lg:col-9">
+    <div class="col-12 md:col-6 lg:col-10">
         <div class="grid">
             <div class="col-6" *ngFor="let image of images">
                 <p-card class="p-0">
                     <p-image width="100%" src="http://localhost:8000/imagenes/{{image.url_processed}}" alt="Image" [preview]="true"></p-image>
-                    <p-toggleButton onLabel="Positiu" offLabel=" Fals positiu" [style]="{ width: '100%' }"></p-toggleButton>
+                    <p-button *ngIf="image.positive == null" label="Validar" styleClass="p-button-info" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
+                    <p-button *ngIf="image.positive ==  'true'" label="Positiu" styleClass="p-button-success" [style]="{ width: '100%' }" (click)="toggleResult(image.id, false)"></p-button>
+                    <p-button *ngIf="image.positive == 'false'" label="Fals Positiu" styleClass="p-button-danger" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
                 </p-card>
             </div>
         </div>

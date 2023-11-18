@@ -23,6 +23,7 @@ export class ResultComponent {
   cities!: City[];
   public dates = [];
   public images = [];
+  public date = '';
 
   formGroup!: FormGroup;
 
@@ -37,9 +38,21 @@ export class ResultComponent {
     } 
 
     onChange(newValue) {
+      this.date = newValue.date;
       this.resultService.getResultsByDate(newValue.date).subscribe((data) => {
         this.images = data;
-        console.log(this.images);
+      });
+    }
+
+    getRsultByDate() {
+      this.resultService.getResultsByDate(this.date).subscribe((data) => {
+        this.images = data;
+      });
+    }
+
+    toggleResult(id, value) {
+      this.resultService.updateResult(id, value).subscribe((data) => {
+        this.getRsultByDate();
       });
     }
 

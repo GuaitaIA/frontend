@@ -10,6 +10,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { ImageModule } from 'primeng/image';
 import { CardModule } from 'primeng/card';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ButtonModule } from 'primeng/button';
+import { MenubarModule } from 'primeng/menubar';
 
 import { ResultService } from '../services/result.service';
 
@@ -25,6 +27,8 @@ import { ResultService } from '../services/result.service';
     ImageModule,
     CardModule,
     ToggleButtonModule,
+    ButtonModule,
+    MenubarModule,
     ResultRoutingModule
   ],
   providers: [

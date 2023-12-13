@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
                             data: this.obtenerDetecciones(this.detections![1])
                         },
                         {
-                            label: 'Falsos positivos',
+                            label: 'Negatius',
                             backgroundColor: documentStyle.getPropertyValue('--red-500'),
                             borderColor: documentStyle.getPropertyValue('--red-500'),
                             data: this.obtenerNoDetecciones(this.detections![1])
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
                             data: this.obtenerDetecciones(this.detections![1])
                         },
                         {
-                            label: 'Falsos positivos',
+                            label: 'Negatius',
                             backgroundColor: documentStyle.getPropertyValue('--red-500'),
                             borderColor: documentStyle.getPropertyValue('--red-500'),
                             data: this.obtenerNoDetecciones(this.detections![1])

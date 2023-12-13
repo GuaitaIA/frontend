@@ -22,3 +22,16 @@
     background: #22C55E !important;
     border: 1px solid #22C55E !important;
 }
+
+.p-listbox{
+    background: transparent;
+    color: #495057;
+    border-radius: 6px;
+    border: 1px solid var(--surface-border);
+}
+
+.p-listbox .p-listbox-list .p-listbox-item.p-highlight{
+    color: white;
+    background: var(--primary-color);
+    font-weight: 900;
+}

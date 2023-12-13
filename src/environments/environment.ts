@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiHost: 'https://guaitaia.capydata.tech',
+  apiHost: 'https://guaitaia.capydata.tech:9000',
 };
 
 /*

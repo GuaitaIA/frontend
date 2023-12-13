@@ -34,7 +34,7 @@ export class AnalyzeService {
 
     formData.append('confianza', '0.5');
     formData.append('iou', '0.5');
-    formData.append('cpu', '0');
+    formData.append('cpu', '1');
 
     return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios/`, formData);
   }

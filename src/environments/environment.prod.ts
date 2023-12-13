@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiHost: 'http://localhost:8000',
+  apiHost: 'https://guaitaia.capydata.tech:9000',
 };

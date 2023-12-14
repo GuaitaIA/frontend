@@ -12,7 +12,7 @@ export class StatisticsService {
   ) { }
 
   getStatistics(date?: string) {
-    if(date) return this.httpClient.get<any>(`${environment.apiHost}/statistics?date=${date}`);
+    if(date) return this.httpClient.get<any>(`${environment.apiHost}/statistics/?date=${date}`);
     else return this.httpClient.get<any>(`${environment.apiHost}/statistics/`);
   }
 }

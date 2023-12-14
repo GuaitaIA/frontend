@@ -1,10 +1,10 @@
 <div class="grid">
-    <div class="col-12 md:col-6 lg:col-2">
+    <div class="col-4 msm:col-4 md:col-4 lg:col-4 xl:col-3 ">
         <form [formGroup]="formGroup">
-            <p-listbox [options]="dates" formControlName="selectedCity" optionLabel="date" (ngModelChange)="onChange($event)" [style]="{ width: '15rem' }"></p-listbox>
+            <p-listbox [options]="dates" formControlName="selectedCity" optionLabel="date" (ngModelChange)="onChange($event)" [style]="{ width: '17%' }"></p-listbox>
         </form>
     </div>
-    <div class="col-12 md:col-6 lg:col-10">
+    <div class="col">
         <div class="grid">
             <div class="col-6" *ngFor="let image of images">
                 <p-card class="p-0">

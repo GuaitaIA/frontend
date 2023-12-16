@@ -2,7 +2,30 @@
 
 <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
 
+<div class="card flex flex-column md:flex-row gap-3 mt-4">
+    <div class="flex-auto">
+        <div class="form-group">
+            <label for="confianza" class="mr-2 font-bold">Confianza</label>
+            <p-inputNumber inputId="confianza" [(ngModel)]="confianza" [min]="0" [max]="1" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"> </p-inputNumber>
+        </div>
+    </div>
+
+    <div class="flex-auto">
+        <div class="form-group">
+            <label for="iou" class="mr-2 font-bold">IOU</label>
+            <p-inputNumber inputId="iou" [(ngModel)]="iou" [min]="0" [max]="1" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"> </p-inputNumber>
+        </div>
+    </div>
+
+    <div class="flex-auto">
+        <div class="form-group">
+            <p-dropdown [options]="cpus" [(ngModel)]="cpu" optionLabel="name"></p-dropdown>
+        </div>
+    </div>
+</div>
+
 <div *ngIf="activeItem.label == 'Imagenes';else other_tabMenu" class="mt-5">
+
     <div class="card">
         <p-fileUpload name="demo[]" chooseLabel="Escollir" uploadLabel="Pujar" cancelLabel="Cancel·lar" (uploadHandler)="onUpload($event)" (onSelect)="onSelect()" [multiple]="true" [customUpload]="true" accept="image/*" maxFileSize="1000000" *ngIf="!analyze">
             <ng-template pTemplate="content">
@@ -28,6 +51,7 @@
 <ng-template #other_tabMenu>
     <div class="mt-4 mb-4">
         <form [formGroup]="formulario" *ngIf="show">
+            
             <p-button label="Agregar" (click)="agregarUrl()"></p-button>
             <div formArrayName="urls" class="mt-4 mb-4 mr-4">
               <div *ngFor="let url of urls.controls; let i = index" class="url-container" class="mt-4">

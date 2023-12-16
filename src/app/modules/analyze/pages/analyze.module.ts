@@ -10,9 +10,11 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { InputTextModule } from 'primeng/inputtext';
 import { ImageModule } from 'primeng/image';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { AnalyzeService } from '../services/analyze.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -26,9 +28,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProgressSpinnerModule,
     TabMenuModule,
     ReactiveFormsModule,
+    FormsModule,
     InputTextModule,
     ImageModule,
     InputTextareaModule,
+    InputNumberModule,
+    DropdownModule,
     AnalyzeRoutingModule
   ],
   providers: [

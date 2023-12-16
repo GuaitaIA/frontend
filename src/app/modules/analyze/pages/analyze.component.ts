@@ -10,6 +10,11 @@ interface UploadEvent {
   files: File[];
 }
 
+interface Cpu {
+  name: string;
+  code: number;
+}
+
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-analyze',
@@ -22,12 +27,21 @@ export class AnalyzeComponent {
   public results: any[];
   public analyze: boolean = false;
 
+  public cpus: Cpu[] = [
+    { name: 'CPU', code: 1 },
+    { name: 'GPU', code: 0 },
+  ];
+
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 
   formulario: FormGroup;
 
   show: boolean = true;
+
+  confianza = 0.5;
+  iou = 0.5;
+  cpu = this.cpus[0];
 
   constructor(
     private analyzeService: AnalyzeService,
@@ -49,13 +63,13 @@ export class AnalyzeComponent {
   }
 
     onUpload(event:FileUploadHandlerEvent) {
-      console.log('here!!!!!!');
-      this.analyze = true;
+      if(this.confianza && this.iou && this.cpu) {
+        this.analyze = true;
         for(let file of event.files) {
             this.uploadedFiles.push(file);
         }
 
-        this.analyzeService.uploadFiles(this.uploadedFiles).subscribe(
+        this.analyzeService.uploadFiles(this.uploadedFiles, this.confianza, this.iou, this.cpu).subscribe(
           (response) => {
             this.results = response;
             this.analyze = false;
@@ -69,6 +83,9 @@ export class AnalyzeComponent {
             }
           }
         );
+      }else {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Los datos no pueden estar vacios.' });
+      }
     }
 
     onSelect() {
@@ -95,8 +112,7 @@ export class AnalyzeComponent {
     onSubmit() {
       this.show = false;
       this.analyze = true;
-      console.log(this.formulario.value);
-      this.analyzeService.uploadStrings(this.formulario.value.urls).subscribe(
+      this.analyzeService.uploadStrings(this.formulario.value.urls, this.confianza, this.iou, this.cpu).subscribe(
         (response) => {
           this.results = response;
           this.analyze = false;
@@ -114,6 +130,9 @@ export class AnalyzeComponent {
       this.results = [];
       this.formulario = this.fb.group({
         urls: this.fb.array([ this.fb.control('', Validators.required)]),
+        confianza: [0.5, Validators.required],
+        iou: [0.5, Validators.required],
+        cpu: [this.cpu[0], Validators.required],
       });
     }
 

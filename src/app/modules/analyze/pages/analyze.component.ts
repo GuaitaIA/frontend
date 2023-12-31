@@ -13,6 +13,7 @@ interface UploadEvent {
 interface Cpu {
   name: string;
   code: number;
+  disabled?: boolean;
 }
 
 @Component({
@@ -29,7 +30,7 @@ export class AnalyzeComponent {
 
   public cpus: Cpu[] = [
     { name: 'CPU', code: 1 },
-    { name: 'GPU', code: 0 },
+    { name: 'GPU', code: 0, disabled: true },
   ];
 
   items: MenuItem[] | undefined;

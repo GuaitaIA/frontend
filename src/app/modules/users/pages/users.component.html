@@ -1,0 +1,55 @@
+<div class="flex flex-row-reverse flex-wrap mb-4">
+    <div class="flex align-items-center justify-content-center">
+        <p-button label="Añadir" (click)="add()"></p-button>
+    </div>
+</div>
+<div class="mb-4">
+    <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th style="width: 5rem"></th>
+                <th style="width: 5rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>{{ product.code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <p-button icon="pi pi-user-edit" (click)="add()"></p-button>
+                </td>
+                <td>
+                    <p-button styleClass="p-button-danger" icon="pi pi-trash"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <p-dialog header="Añadir usuario" [(visible)]="visible" [style]="{width: '90vw', height: '50vh'}">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="formgrid grid">
+                <div class="field col-12 sm:col-6">
+                    <label for="email">Email</label>
+                    <input id="email" formControlName="email" type="text" pInputText  class="w-full">
+                </div>
+                <div class="field col-12 sm:col-6">
+                    <label for="role">Rol</label>
+                    <p-dropdown formControlName="role" [options]="roles" optionLabel="name" [showClear]="true" placeholder="Seleccione rol" class="w-full"></p-dropdown>
+                </div>
+    
+                <div class="field col-12 sm:col-6">
+                    <label for="zones_id">Zona</label>
+                    <p-dropdown formControlName="zones_id" [options]="zones" optionLabel="name" [showClear]="true" placeholder="Seleccione zona" class="w-full"></p-dropdown>
+                </div>
+                <div class="field col-12 sm:col-12">
+                    <p-button type="submit" label="Guardar"></p-button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+</div>

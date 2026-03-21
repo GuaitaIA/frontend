@@ -51,7 +51,7 @@
 			</p-autoComplete>
 
 			<h5>Calendar</h5>
-			<p-calendar [showIcon]="true" inputId="icon"></p-calendar>
+			<p-datepicker [showIcon]="true" inputId="icon"></p-datepicker>
 
 			<h5>InputNumber</h5>
 			<p-inputNumber mode="decimal" [showButtons]="true" [min]="0" [max]="100">
@@ -132,7 +132,7 @@
 			</div>
 
 			<h5>Input Switch</h5>
-			<p-inputSwitch [(ngModel)]="valSwitch"></p-inputSwitch>
+			<p-toggleswitch [(ngModel)]="valSwitch"></p-toggleswitch>
 		</div>
 
 		<div class="card">
@@ -140,7 +140,7 @@
 			<p-listbox [options]="cities" [(ngModel)]="selectedList" [filter]="true"></p-listbox>
 
 			<h5>Dropdown</h5>
-			<p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Select a City" [showClear]="true"></p-dropdown>
+			<p-select [options]="cities" [(ngModel)]="selectedDrop" placeholder="Select a City" [showClear]="true"></p-select>
 
 			<h5>Multiselect</h5>
 			<p-multiSelect [options]="countries" [(ngModel)]="selectedMulti" placeholder="Select a Country" optionLabel="name" class="multiselect-custom" display="chip">

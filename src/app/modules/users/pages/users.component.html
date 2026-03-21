@@ -39,12 +39,12 @@
                 </div>
                 <div class="field col-12 sm:col-6">
                     <label for="role">Rol</label>
-                    <p-dropdown formControlName="role" [options]="roles" optionLabel="name" [showClear]="true" placeholder="Seleccione rol" class="w-full"></p-dropdown>
+                    <p-select formControlName="role" [options]="roles" optionLabel="name" [showClear]="true" placeholder="Seleccione rol" class="w-full"></p-select>
                 </div>
     
                 <div class="field col-12 sm:col-6">
                     <label for="zones_id">Zona</label>
-                    <p-dropdown formControlName="zones_id" [options]="zones" optionLabel="name" [showClear]="true" placeholder="Seleccione zona" class="w-full"></p-dropdown>
+                    <p-select formControlName="zones_id" [options]="zones" optionLabel="name" [showClear]="true" placeholder="Seleccione zona" class="w-full"></p-select>
                 </div>
                 <div class="field col-12 sm:col-12">
                     <p-button type="submit" label="Guardar"></p-button>

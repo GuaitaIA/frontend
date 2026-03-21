@@ -65,11 +65,11 @@
 								Status
 								<p-columnFilter field="status" matchMode="equals" display="menu">
 									<ng-template pTemplate="filter" let-value let-filter="filterCallback">
-										<p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any" [style]="{'min-width': '12rem'}" >
+										<p-select [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any" [style]="{'min-width': '12rem'}" >
 											<ng-template let-option pTemplate="item">
 												<span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
 											</ng-template>
-										</p-dropdown>
+										</p-select>
 									</ng-template>
 								</p-columnFilter>
 							</div>

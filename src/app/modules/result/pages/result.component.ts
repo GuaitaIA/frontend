@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ResultService } from '../services/result.service';
+import { environment } from '../../../../environments/environment';
 
 
 interface City {
@@ -9,12 +10,14 @@ interface City {
 }
 
 @Component({
-  encapsulation: ViewEncapsulation.None,
-  selector: 'app-result',
-  templateUrl: './result.component.html',
-  styleUrls: ['./result.component.scss']
+    encapsulation: ViewEncapsulation.None,
+    selector: 'app-result',
+    templateUrl: './result.component.html',
+    styleUrls: ['./result.component.scss'],
+    standalone: false
 })
 export class ResultComponent {
+  public readonly apiHost = environment.apiHost;
 
   constructor(
     private resultService: ResultService

@@ -1,3 +1,31 @@
-.p-calendar .p-inputtext {
+.dashboard-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 247, 229, 0.88));
+}
+
+.dashboard-card__label {
+    color: var(--text-color-secondary);
+    font-weight: 600;
+}
+
+.dashboard-card__value {
+    font-family: var(--heading-font-family);
+    font-size: 2.35rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.dashboard-card__value--total {
+    color: var(--brand-yellow-700);
+}
+
+.dashboard-card__value--positive {
+    color: var(--brand-green-500);
+}
+
+.dashboard-card__value--negative {
+    color: var(--brand-earth-500);
+}
+
+.p-datepicker .p-inputtext {
     text-align: center !important;
 }

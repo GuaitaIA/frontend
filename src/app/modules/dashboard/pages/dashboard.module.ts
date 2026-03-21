@@ -10,7 +10,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { DashboardsRoutingModule } from './dashboard-routing.module';
 import { StatisticsService } from '../services/statistics.service';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DatePipe } from '@angular/common';
 
 @NgModule({
@@ -23,7 +23,7 @@ import { DatePipe } from '@angular/common';
         StyleClassModule,
         PanelMenuModule,
         ButtonModule,
-        CalendarModule,
+        DatePickerModule,
         DashboardsRoutingModule
     ],
     declarations: [DashboardComponent],

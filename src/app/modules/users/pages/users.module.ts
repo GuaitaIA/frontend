@@ -8,7 +8,7 @@ import { UsersComponent } from './users.component';
 
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../services/users.service';
 
@@ -23,7 +23,7 @@ import { UsersService } from '../services/users.service';
     ButtonModule,
     DialogModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     ReactiveFormsModule,
     FormsModule,
     UsersRoutingModule

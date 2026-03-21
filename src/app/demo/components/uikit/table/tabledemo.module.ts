@@ -9,7 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RippleModule } from 'primeng/ripple';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
@@ -28,7 +28,7 @@ import { RatingModule } from 'primeng/rating';
 		ToggleButtonModule,
 		RippleModule,
 		MultiSelectModule,
-		DropdownModule,
+		SelectModule,
 		ProgressBarModule,
 		ToastModule
 	],

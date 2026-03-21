@@ -5,33 +5,23 @@
 .p-listbox{
     position: fixed;
     height: calc(100vh - 12rem);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text-color);
+    border-radius: calc(var(--border-radius) - 0.125rem);
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 18px 32px rgba(82, 64, 28, 0.08);
+}
+
+.p-card {
+    overflow: hidden;
 }
 
 .p-card .p-card-body, .p-card-content{
     padding: 0 !important;
 }
 
-.p-button.p-button-info, .p-buttonset.p-button-info > .p-button, .p-splitbutton.p-button-info > .p-button {
-    color: #ffffff !important;
-    background: #3B82F6 !important;
-    border: 1px solid #3B82F6 !important;
-}
-
-.p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button {
-    color: #ffffff !important;
-    background: #22C55E !important;
-    border: 1px solid #22C55E !important;
-}
-
-.p-listbox{
-    background: transparent;
-    color: #495057;
-    border-radius: 6px;
-    border: 1px solid var(--surface-border);
-}
-
 .p-listbox .p-listbox-list .p-listbox-item.p-highlight{
-    color: white;
-    background: var(--primary-color);
-    font-weight: 900;
+    color: var(--brand-green-700);
+    background: rgba(246, 180, 0, 0.18);
+    font-weight: 800;
 }

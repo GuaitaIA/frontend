@@ -71,25 +71,25 @@
 
         <div class="card">
             <h5>Sidebar</h5>
-            <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000">
+            <p-drawer [(visible)]="visibleSidebar1" [baseZIndex]="10000">
                 <h3 style="font-weight:normal">Left Sidebar</h3>
-            </p-sidebar>
+            </p-drawer>
 
-            <p-sidebar [(visible)]="visibleSidebar2" position="right" [baseZIndex]="10000">
+            <p-drawer [(visible)]="visibleSidebar2" position="right" [baseZIndex]="10000">
                 <h3 style="font-weight:normal">Right Sidebar</h3>
-            </p-sidebar>
+            </p-drawer>
 
-            <p-sidebar [(visible)]="visibleSidebar3" position="top" [baseZIndex]="10000">
+            <p-drawer [(visible)]="visibleSidebar3" position="top" [baseZIndex]="10000">
                 <h3 style="font-weight:normal">Top Sidebar</h3>
-            </p-sidebar>
+            </p-drawer>
 
-            <p-sidebar [(visible)]="visibleSidebar4" position="bottom" [baseZIndex]="10000">
+            <p-drawer [(visible)]="visibleSidebar4" position="bottom" [baseZIndex]="10000">
                 <h3 style="font-weight:normal">Bottom Sidebar</h3>
-            </p-sidebar>
+            </p-drawer>
 
-            <p-sidebar [(visible)]="visibleSidebar5" [fullScreen]="true" [baseZIndex]="10000">
+            <p-drawer [(visible)]="visibleSidebar5" [fullScreen]="true" [baseZIndex]="10000">
                 <h3 style="font-weight:normal">Full Screen Sidebar</h3>
-            </p-sidebar>
+            </p-drawer>
 
             <div class="flex flex-wrap gap-2">
                 <button pButton type="button" (click)="visibleSidebar1 = true" icon="pi pi-arrow-right" class="p-button-warning"></button>

@@ -15,7 +15,8 @@ import { AppConstants } from 'src/app/app.constants';
             margin-right: 1rem;
             color: var(--primary-color) !important;
         }
-    `]
+    `],
+    standalone: false
 })
 export class LoginComponent{
 

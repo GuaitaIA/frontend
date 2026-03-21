@@ -1,19 +1,27 @@
 <div class="grid">
-    <div class="col-4 msm:col-4 md:col-4 lg:col-4 xl:col-3 ">
-        <form [formGroup]="formGroup">
-            <p-listbox [options]="dates" formControlName="selectedCity" optionLabel="date" (ngModelChange)="onChange($event)" [style]="{ width: '17%' }"></p-listbox>
-        </form>
-    </div>
-    <div class="col">
-        <div class="grid">
-            <div class="col-6" *ngFor="let image of images">
-                <p-card class="p-0">
-                    <p-image width="100%" src="https://guaitaia.capydata.tech:9000/imagenes/{{image.url_processed}}" alt="Image" [preview]="true"></p-image>
-                    <p-button *ngIf="image.positive == null" label="Validar" styleClass="p-button-info" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
-                    <p-button *ngIf="image.positive ==  'true'" label="Positiu" styleClass="p-button-success" [style]="{ width: '100%' }" (click)="toggleResult(image.id, false)"></p-button>
-                    <p-button *ngIf="image.positive == 'false'" label="Fals Positiu" styleClass="p-button-danger" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
-                </p-card>
-            </div>
+  <div class="col-4 msm:col-4 md:col-4 lg:col-4 xl:col-3 ">
+    <form [formGroup]="formGroup">
+      <p-listbox [options]="dates" formControlName="selectedCity" optionLabel="date" (ngModelChange)="onChange($event)" [style]="{ width: '17%' }"></p-listbox>
+    </form>
+  </div>
+  <div class="col">
+    <div class="grid">
+      @for (image of images; track image) {
+        <div class="col-6">
+          <p-card class="p-0">
+            <p-image width="100%" [src]="apiHost + '/imagenes/' + image.url_processed" alt="Image" [preview]="true"></p-image>
+            @if (image.positive == null) {
+              <p-button label="Validar" styleClass="p-button-info" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
+            }
+            @if (image.positive ==  'true') {
+              <p-button label="Positiu" styleClass="p-button-success" [style]="{ width: '100%' }" (click)="toggleResult(image.id, false)"></p-button>
+            }
+            @if (image.positive == 'false') {
+              <p-button label="Fals Positiu" styleClass="p-button-danger" [style]="{ width: '100%' }" (click)="toggleResult(image.id, true)"></p-button>
+            }
+          </p-card>
         </div>
+      }
     </div>
+  </div>
 </div>

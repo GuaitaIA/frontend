@@ -1,21 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AnalyzeRoutingModule } from './analyze-routing.module';
 import { AnalyzeComponent } from './analyze.component';
-import { FileUploadModule } from 'primeng/fileupload';
-import { ToastModule } from 'primeng/toast';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { TabMenuModule } from 'primeng/tabmenu';
-import { InputTextModule } from 'primeng/inputtext';
-import { ImageModule } from 'primeng/image';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-
 import { AnalyzeService } from '../services/analyze.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { ButtonModule } from 'primeng/button';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ImageModule } from 'primeng/image';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
+import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -23,17 +20,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    ButtonModule,
     FileUploadModule,
-    ToastModule,
-    ProgressSpinnerModule,
-    TabMenuModule,
-    ReactiveFormsModule,
     FormsModule,
-    InputTextModule,
     ImageModule,
-    InputTextareaModule,
     InputNumberModule,
-    DropdownModule,
+    ProgressSpinnerModule,
+    ReactiveFormsModule,
+    SelectModule,
+    TabsModule,
+    TextareaModule,
+    ToastModule,
     AnalyzeRoutingModule
   ],
   providers: [

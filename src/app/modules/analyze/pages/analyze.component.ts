@@ -1,14 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileUploadHandlerEvent } from 'primeng/fileupload';
+import { MessageService } from 'primeng/api';
 import { AnalyzeService } from '../services/analyze.service';
-import { MenuItem, MessageService } from 'primeng/api';
-
-import { ReactiveFormsModule, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
-}
+import { environment } from '../../../../environments/environment';
 
 interface Cpu {
   name: string;
@@ -17,28 +12,28 @@ interface Cpu {
 }
 
 @Component({
-  encapsulation: ViewEncapsulation.None,
-  selector: 'app-analyze',
-  templateUrl: './analyze.component.html',
-  styleUrls: ['./analyze.component.scss']
+    encapsulation: ViewEncapsulation.None,
+    selector: 'app-analyze',
+    templateUrl: './analyze.component.html',
+    styleUrls: ['./analyze.component.scss'],
+    standalone: false
 })
-export class AnalyzeComponent {
-
-  uploadedFiles: any[] = [];
-  public results: any[];
-  public analyze: boolean = false;
+export class AnalyzeComponent implements OnInit {
+  uploadedFiles: File[] = [];
+  public results: any[] = [];
+  public analyze = false;
+  public readonly apiHost = environment.apiHost;
+  private readonly previewUrls = new Map<File, string>();
 
   public cpus: Cpu[] = [
     { name: 'CPU', code: 1 },
     { name: 'GPU', code: 0, disabled: true },
   ];
 
-  items: MenuItem[] | undefined;
-  activeItem: MenuItem | undefined;
+  formulario!: FormGroup;
 
-  formulario: FormGroup;
-
-  show: boolean = true;
+  show = true;
+  activeTab: 'images' | 'urls' = 'images';
 
   confianza = 0.5;
   iou = 0.5;
@@ -51,94 +46,150 @@ export class AnalyzeComponent {
   ) {}
 
   ngOnInit() {
-    this.items = [
-      { label: 'Imagenes', icon: 'pi pi-fw pi-images' },
-      { label: 'URL/Base64', icon: 'pi pi-fw pi-globe' },
-    ];
-
-    this.activeItem = this.items[0];
-
-    this.formulario = this.fb.group({
-      urls: this.fb.array([ this.fb.control('', Validators.required)]),
-    });
+    this.resetForm();
   }
 
-    onUpload(event:FileUploadHandlerEvent) {
-      if(this.confianza && this.iou && this.cpu) {
-        this.analyze = true;
-        for(let file of event.files) {
-            this.uploadedFiles.push(file);
-        }
+  ngOnDestroy() {
+    this.clearPreviewUrls();
+  }
 
-        this.analyzeService.uploadFiles(this.uploadedFiles, this.confianza, this.iou, this.cpu).subscribe(
-          (response) => {
-            this.results = response;
-            this.analyze = false;
-          },
-          (error) => {
-            console.log(error);
-            if(error == 'Not allowed at this time') {
-              this.results = [];
-              this.analyze = false;
-              this.showMessage();
-            }
-          }
-        );
-      }else {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Los datos no pueden estar vacios.' });
-      }
-    }
-
-    onSelect() {
-      this.results = [];
-    }
-
-    onActiveItemChange(event: MenuItem) {
-      this.activeItem = event;
-      console.log(this.activeItem);
-    }
-
-    get urls(): FormArray {
-      return this.formulario.get('urls') as FormArray;
-    }
-
-    agregarUrl() {
-      this.urls.push(this.fb.control('', Validators.required));
-    }
-    
-    eliminarUrl(index: number) {
-      this.urls.removeAt(index);
-    }
-
-    onSubmit() {
-      this.show = false;
+  onUpload(event: FileUploadHandlerEvent) {
+    if (this.confianza && this.iou && this.cpu) {
       this.analyze = true;
-      this.analyzeService.uploadStrings(this.formulario.value.urls, this.confianza, this.iou, this.cpu).subscribe(
+      this.uploadedFiles = [...event.files];
+
+      this.analyzeService.uploadFiles(this.uploadedFiles, this.confianza, this.iou, this.cpu).subscribe(
         (response) => {
           this.results = response;
           this.analyze = false;
         },
         (error) => {
           console.log(error);
+          if (error === 'Not allowed at this time') {
+            this.results = [];
+            this.analyze = false;
+            this.showMessage();
+          }
         }
       );
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Los datos no pueden estar vacios.' });
+    }
+  }
+
+  onSelect(event: { currentFiles?: File[]; files?: File[] }) {
+    this.results = [];
+    this.syncPreviewUrls(event.currentFiles ?? event.files ?? []);
+  }
+
+  onClear() {
+    this.results = [];
+    this.clearPreviewUrls();
+  }
+
+  onRemove(event: { file: File }) {
+    if (event?.file) {
+      this.releasePreviewUrl(event.file);
+    }
+  }
+
+  get urls(): FormArray {
+    return this.formulario.get('urls') as FormArray;
+  }
+
+  agregarUrl() {
+    this.urls.push(this.fb.control('', Validators.required));
+  }
+
+  eliminarUrl(index: number) {
+    this.urls.removeAt(index);
+  }
+
+  onSubmit() {
+    this.show = false;
+    this.analyze = true;
+    this.results = [];
+
+    this.analyzeService.uploadStrings(this.formulario.value.urls, this.confianza, this.iou, this.cpu).subscribe(
+      (response) => {
+        this.results = response;
+        this.analyze = false;
+      },
+      (error) => {
+        console.log(error);
+        this.analyze = false;
+      }
+    );
+  }
+
+  limpiar() {
+    this.show = true;
+    this.results = [];
+    this.resetForm();
+  }
+
+  showMessage() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fora de servei' });
+  }
+
+  getPreviewUrl(file: File): string {
+    const fileWithObjectUrl = file as File & { objectURL?: string };
+    if (fileWithObjectUrl.objectURL) {
+      return fileWithObjectUrl.objectURL;
     }
 
-    natejar() {
-      this.show = true;
-      this.formulario.reset();
-      this.urls.clear();
-      this.results = [];
-      this.formulario = this.fb.group({
-        urls: this.fb.array([ this.fb.control('', Validators.required)]),
-        confianza: [0.5, Validators.required],
-        iou: [0.5, Validators.required],
-        cpu: [this.cpu[0], Validators.required],
-      });
+    const cachedUrl = this.previewUrls.get(file);
+    if (cachedUrl) {
+      return cachedUrl;
     }
 
-    showMessage() {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fora de servei' });
+    const previewUrl = URL.createObjectURL(file);
+    this.previewUrls.set(file, previewUrl);
+
+    return previewUrl;
+  }
+
+  formatSize(bytes: number): string {
+    if (!bytes) {
+      return '0 B';
     }
-    
+
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const unitIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    const value = bytes / Math.pow(1024, unitIndex);
+
+    return `${value.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+  }
+
+  private resetForm() {
+    this.formulario = this.fb.group({
+      urls: this.fb.array([this.fb.control('', Validators.required)]),
+    });
+  }
+
+  private syncPreviewUrls(files: File[]) {
+    const activeFiles = new Set(files);
+
+    for (const file of Array.from(this.previewUrls.keys())) {
+      if (!activeFiles.has(file)) {
+        this.releasePreviewUrl(file);
+      }
+    }
+  }
+
+  private releasePreviewUrl(file: File) {
+    const previewUrl = this.previewUrls.get(file);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      this.previewUrls.delete(file);
+    }
+  }
+
+  private clearPreviewUrls() {
+    for (const previewUrl of this.previewUrls.values()) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    this.previewUrls.clear();
+  }
 }

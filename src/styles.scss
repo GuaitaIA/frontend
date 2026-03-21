@@ -4,41 +4,379 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";
 
 /* PrimeNG */
-@import "../node_modules/primeng/resources/primeng.min.css";
-@import "../node_modules/primeflex/primeflex.scss";
-@import "../node_modules/primeicons/primeicons.css";
+@import "primeflex/primeflex.scss";
+@import "primeicons/primeicons.css";
 
 /* Demos */
 @import "assets/demo/styles/flags/flags.css";
 @import "assets/demo/styles/badges.scss";
 @import "assets/demo/styles/code.scss";
 
+@mixin button-filled($background, $hover, $active, $color) {
+    background: $background !important;
+    border-color: $background !important;
+    color: $color !important;
+    box-shadow: none !important;
+
+    &:enabled:hover {
+        background: $hover !important;
+        border-color: $hover !important;
+        color: $color !important;
+    }
+
+    &:enabled:active {
+        background: $active !important;
+        border-color: $active !important;
+        color: $color !important;
+    }
+}
+
+@mixin button-outlined($color, $hoverBackground) {
+    background: transparent !important;
+    border-color: $color !important;
+    color: $color !important;
+
+    &:enabled:hover {
+        background: $hoverBackground !important;
+        border-color: $color !important;
+        color: $color !important;
+    }
+
+    &:enabled:active {
+        background: rgba($color, 0.2) !important;
+        border-color: $color !important;
+        color: $color !important;
+    }
+}
+
+@mixin button-text($color, $hoverBackground) {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: $color !important;
+
+    &:enabled:hover {
+        background: $hoverBackground !important;
+        border-color: transparent !important;
+        color: $color !important;
+    }
+
+    &:enabled:active {
+        background: rgba($color, 0.16) !important;
+        border-color: transparent !important;
+        color: $color !important;
+    }
+}
+
 :root {
-    --primary-color: #f7b500;
-    --surface-ground: #F3EEEA;
-    --surface-border: #f7b500;
-    --surface-overlay: #F3EEEA;
-    --surface-card: #F3EEEA;
+    --brand-yellow-50: #fff9e5;
+    --brand-yellow-100: #fff3c3;
+    --brand-yellow-200: #ffe68a;
+    --brand-yellow-300: #ffd24d;
+    --brand-yellow-400: #f9c329;
+    --brand-yellow-500: #f6b400;
+    --brand-yellow-600: #f6a100;
+    --brand-yellow-700: #d78c00;
+    --brand-yellow-800: #b87500;
+    --brand-yellow-900: #8f5a00;
+    --brand-yellow-950: #5e3b00;
+
+    --brand-green-50: #edf8e9;
+    --brand-green-100: #d3efca;
+    --brand-green-200: #acdca0;
+    --brand-green-300: #7fc86d;
+    --brand-green-400: #57b544;
+    --brand-green-500: #3e9f27;
+    --brand-green-600: #347f21;
+    --brand-green-700: #2b661c;
+    --brand-green-800: #234f17;
+    --brand-green-900: #1d3f12;
+    --brand-green-950: #102409;
+
+    --brand-earth-50: #fdf0ea;
+    --brand-earth-100: #f8d7c9;
+    --brand-earth-200: #f0b298;
+    --brand-earth-300: #e48762;
+    --brand-earth-400: #cf6841;
+    --brand-earth-500: #b95831;
+    --brand-earth-600: #9a4727;
+    --brand-earth-700: #7d391f;
+    --brand-earth-800: #602b17;
+    --brand-earth-900: #481f10;
+
+    --brand-ink: #4b453d;
+    --brand-muted: #6f685d;
+    --brand-surface-0: #fffdfa;
+    --brand-surface-50: #fbf7ef;
+    --brand-surface-100: #f5ecdc;
+    --brand-surface-200: #eadcc3;
+    --brand-surface-300: #dcc7a5;
+    --brand-surface-400: #cab182;
+    --brand-surface-500: #ac9362;
+    --brand-surface-600: #8d754b;
+    --brand-surface-700: #6d5a39;
+    --brand-surface-800: #4f4129;
+    --brand-surface-900: #382e1d;
+    --brand-surface-950: #231c12;
+
+    --font-family: "Raleway", var(--p-font-family, "Segoe UI", sans-serif);
+    --heading-font-family: "Roboto Condensed", var(--font-family);
+    --border-radius: 1rem;
+    --transition-duration: 0.2s;
+    --card-shadow: 0 22px 42px rgba(82, 64, 28, 0.08);
+
+    --p-primary-50: var(--brand-yellow-50);
+    --p-primary-100: var(--brand-yellow-100);
+    --p-primary-200: var(--brand-yellow-200);
+    --p-primary-300: var(--brand-yellow-300);
+    --p-primary-400: var(--brand-yellow-400);
+    --p-primary-500: var(--brand-yellow-500);
+    --p-primary-600: var(--brand-yellow-600);
+    --p-primary-700: var(--brand-yellow-700);
+    --p-primary-800: var(--brand-yellow-800);
+    --p-primary-900: var(--brand-yellow-900);
+    --p-primary-950: var(--brand-yellow-950);
+    --p-primary-color: var(--brand-yellow-500);
+    --p-primary-contrast-color: #4a3810;
+    --p-primary-hover-color: var(--brand-yellow-600);
+    --p-primary-active-color: var(--brand-yellow-700);
+    --p-highlight-background: #fff0b6;
+    --p-highlight-color: #5f4710;
+    --p-focus-ring-color: rgba(246, 180, 0, 0.28);
+    --p-text-color: var(--brand-ink);
+    --p-text-muted-color: var(--brand-muted);
+    --p-surface-0: var(--brand-surface-0);
+    --p-surface-50: var(--brand-surface-50);
+    --p-surface-100: var(--brand-surface-100);
+    --p-surface-200: var(--brand-surface-200);
+    --p-surface-300: var(--brand-surface-300);
+    --p-surface-400: var(--brand-surface-400);
+    --p-surface-500: var(--brand-surface-500);
+    --p-surface-600: var(--brand-surface-600);
+    --p-surface-700: var(--brand-surface-700);
+    --p-surface-800: var(--brand-surface-800);
+    --p-surface-900: var(--brand-surface-900);
+    --p-surface-950: var(--brand-surface-950);
+    --p-content-border-color: #e7dcc7;
+    --p-mask-background: rgba(76, 64, 38, 0.5);
+
+    --primary-color: var(--p-primary-color);
+    --primary-color-text: var(--p-primary-contrast-color);
+    --primary-50: var(--p-primary-50);
+    --primary-100: var(--p-primary-100);
+    --primary-200: var(--p-primary-200);
+    --primary-300: var(--p-primary-300);
+    --primary-400: var(--p-primary-400);
+    --primary-500: var(--p-primary-500);
+    --primary-600: var(--p-primary-600);
+    --primary-700: var(--p-primary-700);
+    --primary-800: var(--p-primary-800);
+    --primary-900: var(--p-primary-900);
+
+    --text-color: var(--p-text-color);
+    --text-color-secondary: var(--p-text-muted-color);
+
+    --surface-0: var(--p-surface-0);
+    --surface-50: var(--p-surface-50);
+    --surface-100: var(--p-surface-100);
+    --surface-200: var(--p-surface-200);
+    --surface-300: var(--p-surface-300);
+    --surface-400: var(--p-surface-400);
+    --surface-500: var(--p-surface-500);
+    --surface-600: var(--p-surface-600);
+    --surface-700: var(--p-surface-700);
+    --surface-800: var(--p-surface-800);
+    --surface-900: var(--p-surface-900);
+    --surface-950: var(--p-surface-950);
+
+    --surface-ground: var(--p-surface-100);
+    --surface-section: var(--p-surface-0);
+    --surface-card: rgba(255, 255, 255, 0.94);
+    --surface-overlay: rgba(255, 255, 255, 0.98);
+    --surface-border: var(--p-content-border-color, var(--p-surface-200));
+    --surface-hover: #fff4d0;
+
+    --blue-500: var(--brand-yellow-500);
+    --green-500: var(--brand-green-500);
+    --red-500: var(--brand-earth-500);
+    --yellow-500: var(--brand-yellow-500);
+}
+
+html {
+    font-size: 15px;
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 0, 0.18), transparent 28%),
+        radial-gradient(circle at left center, rgba(62, 159, 39, 0.08), transparent 30%),
+        linear-gradient(180deg, #fffdf8 0%, #f4f4f4 100%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.layout-topbar-logo span,
+.layout-menu .layout-menuitem-root-text,
+.p-dialog .p-dialog-title {
+    font-family: var(--heading-font-family);
+    letter-spacing: 0.015em;
+}
+
+a {
+    color: var(--brand-green-600);
+    transition: color var(--transition-duration);
+}
+
+a:hover {
+    color: var(--brand-green-700);
+}
+
+.layout-topbar {
+    background: linear-gradient(90deg, #f6b400 0%, #f6c232 58%, #f8d56d 100%);
+    border-bottom: 1px solid rgba(74, 56, 16, 0.12);
+}
+
+.layout-topbar .layout-topbar-logo,
+.layout-topbar .layout-topbar-button,
+.layout-topbar .layout-topbar-button:hover,
+.layout-topbar .layout-topbar-button:focus {
+    color: #4a3810;
+}
+
+.layout-topbar .layout-topbar-button:hover {
+    background-color: rgba(255, 255, 255, 0.32);
+}
+
+.layout-topbar .layout-topbar-logo span {
+    font-weight: 700;
+}
+
+.layout-sidebar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(185, 147, 98, 0.28);
+}
+
+.layout-menu .layout-root-menuitem > .layout-menuitem-root-text {
+    color: #7d6432;
+    letter-spacing: 0.08em;
+}
+
+.layout-menu ul a.active-route {
+    color: var(--brand-green-600);
+    background: rgba(62, 159, 39, 0.1);
+}
+
+.layout-menu ul a:hover {
+    background: rgba(246, 180, 0, 0.12);
+}
+
+.card,
+.p-card {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+    backdrop-filter: blur(10px);
+}
+
+.p-inputtext,
+.p-inputnumber-input,
+.p-select,
+.p-listbox {
+    background: #fffefb;
+    border-color: var(--surface-border);
+    color: var(--text-color);
+}
+
+.p-inputtext:enabled:focus,
+.p-inputnumber-input:enabled:focus,
+.p-select:not(.p-disabled).p-focus,
+.p-listbox:not(.p-disabled).p-focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(246, 180, 0, 0.16);
+}
+
+.p-tablist {
+    background: transparent;
+    border-color: var(--surface-border);
+}
+
+.p-tab {
+    font-weight: 700;
 }
 
 .p-button {
-    background-color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
+    font-weight: 700;
+    letter-spacing: 0.01em;
 }
 
-.layout-sidebar{
+.p-button.p-button-info,
+.p-buttonset.p-button-info > .p-button,
+.p-splitbutton.p-button-info > .p-button {
+    @include button-filled(#f6b400, #f6a100, #d78c00, #4a3810);
+}
+
+.p-button.p-button-info.p-button-outlined,
+.p-buttonset.p-button-info > .p-button.p-button-outlined,
+.p-splitbutton.p-button-info > .p-button.p-button-outlined {
+    @include button-outlined(#d78c00, rgba(246, 180, 0, 0.12));
+}
+
+.p-button.p-button-info.p-button-text,
+.p-buttonset.p-button-info > .p-button.p-button-text,
+.p-splitbutton.p-button-info > .p-button.p-button-text {
+    @include button-text(#d78c00, rgba(246, 180, 0, 0.12));
+}
+
+.p-button.p-button-success,
+.p-buttonset.p-button-success > .p-button,
+.p-splitbutton.p-button-success > .p-button {
+    @include button-filled(#3e9f27, #347f21, #2b661c, #ffffff);
+}
+
+.p-button.p-button-success.p-button-outlined,
+.p-buttonset.p-button-success > .p-button.p-button-outlined,
+.p-splitbutton.p-button-success > .p-button.p-button-outlined {
+    @include button-outlined(#347f21, rgba(62, 159, 39, 0.1));
+}
+
+.p-button.p-button-success.p-button-text,
+.p-buttonset.p-button-success > .p-button.p-button-text,
+.p-splitbutton.p-button-success > .p-button.p-button-text {
+    @include button-text(#347f21, rgba(62, 159, 39, 0.1));
+}
+
+.p-button.p-button-danger,
+.p-buttonset.p-button-danger > .p-button,
+.p-splitbutton.p-button-danger > .p-button {
+    @include button-filled(#b95831, #9a4727, #7d391f, #ffffff);
+}
+
+.p-button.p-button-danger.p-button-outlined,
+.p-buttonset.p-button-danger > .p-button.p-button-outlined,
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined {
+    @include button-outlined(#9a4727, rgba(185, 88, 49, 0.1));
+}
+
+.p-button.p-button-danger.p-button-text,
+.p-buttonset.p-button-danger > .p-button.p-button-text,
+.p-splitbutton.p-button-danger > .p-button.p-button-text {
+    @include button-text(#9a4727, rgba(185, 88, 49, 0.1));
+}
+
+.p-progressspinner-circle {
+    stroke: var(--primary-color) !important;
+}
+
+.layout-sidebar {
     border: 1px solid var(--surface-border);
 }
 
-.p-calendar .p-inputtext {
-    background-color: var(--surface-ground);
-    border-color: var(--surface-border);
+.p-datepicker .p-inputtext {
     text-align: center !important;
     font-weight: bold;
-}
-
-.p-button.p-button-danger, .p-buttonset.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button {
-    color: #ffffff !important;
-    background: #EF4444 !important;
-    border: 1px solid #EF4444 !important;
 }

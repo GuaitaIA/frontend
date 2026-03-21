@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { InvalidStateDemoComponent } from './invalidstatedemo.component';
 import { InvalidStateDemoRoutingModule } from './invalidstatedemo-routing.module';
 import { AutoCompleteModule } from "primeng/autocomplete";
-import { CalendarModule } from "primeng/calendar";
+import { DatePickerModule } from "primeng/datepicker";
 import { ChipsModule } from "primeng/chips";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { InputMaskModule } from "primeng/inputmask";
 import { InputNumberModule } from "primeng/inputnumber";
 import { CascadeSelectModule } from "primeng/cascadeselect";
 import { MultiSelectModule } from "primeng/multiselect";
-import { InputTextareaModule } from "primeng/inputtextarea";
+import { TextareaModule } from "primeng/textarea";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 
@@ -21,15 +21,15 @@ import { PasswordModule } from "primeng/password";
 		FormsModule,
 		InvalidStateDemoRoutingModule,
 		AutoCompleteModule,
-		CalendarModule,
+		DatePickerModule,
 		ChipsModule,
-		DropdownModule,
+		SelectModule,
 		InputMaskModule,
 		InputNumberModule,
 		CascadeSelectModule,
 		MultiSelectModule,
 		PasswordModule,
-		InputTextareaModule,
+		TextareaModule,
 		InputTextModule
 	],
 	declarations: [InvalidStateDemoComponent]

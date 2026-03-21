@@ -21,10 +21,11 @@ interface Roles {
 }
 
 @Component({
-  encapsulation: ViewEncapsulation.None,
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+    encapsulation: ViewEncapsulation.None,
+    selector: 'app-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.scss'],
+    standalone: false
 })
 
 export class UsersComponent {

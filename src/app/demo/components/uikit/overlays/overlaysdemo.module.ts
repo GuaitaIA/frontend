@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { SidebarModule } from 'primeng/sidebar';
+import { DrawerModule } from 'primeng/drawer';
 import { RippleModule } from 'primeng/ripple';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { TooltipModule } from 'primeng/tooltip';
@@ -27,7 +27,7 @@ import { InputTextModule } from 'primeng/inputtext';
 		OverlayPanelModule,
 		TableModule,
 		ConfirmDialogModule,
-		SidebarModule,
+		DrawerModule,
 		RippleModule,
 		ConfirmPopupModule
 	],

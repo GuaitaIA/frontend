@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { co } from '@fullcalendar/core/internal-common';
 import { BehaviorSubject, Observable, Subscription, map } from 'rxjs';
 import { AppConstants } from 'src/app/app.constants';
 import { environment } from 'src/environments/environment';
@@ -13,7 +12,7 @@ export class AuthService {
 
   // private fields
   private unsubscribe: Subscription[] = [];
-    
+
   // public fields
   public currentUser$: Observable<any>;
   public currentUserSubject: BehaviorSubject<any>;
@@ -31,10 +30,10 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
     private router: Router,
-  ) { 
+  ) {
     let user = undefined;
-    if(localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER)){
-        user = localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER);
+    if (localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER)) {
+      user = JSON.parse(localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER));
     }
     this.currentUserSubject = new BehaviorSubject<any>(user);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -49,7 +48,7 @@ export class AuthService {
       map(response => {
         if (response && response.access_token) {
           this.isLoggedIn = true;
-          this.currentUserValue = 'response';
+          this.currentUserValue = response;
           localStorage.setItem(AppConstants.LOCAL_STORAGE_CURRENT_USER, JSON.stringify(response));
         }
         return response;

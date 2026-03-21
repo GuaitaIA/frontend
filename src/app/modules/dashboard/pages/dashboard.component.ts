@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 @Component({
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent implements OnInit {
 
@@ -36,14 +37,14 @@ export class DashboardComponent implements OnInit {
                     datasets: [
                         {
                             label: 'Positivos',
-                            backgroundColor: documentStyle.getPropertyValue('--green-500'),
-                            borderColor: documentStyle.getPropertyValue('--green-500'),
+                            backgroundColor: documentStyle.getPropertyValue('--brand-green-500'),
+                            borderColor: documentStyle.getPropertyValue('--brand-green-500'),
                             data: this.obtenerDetecciones(this.detections![1])
                         },
                         {
                             label: 'Negatius',
-                            backgroundColor: documentStyle.getPropertyValue('--red-500'),
-                            borderColor: documentStyle.getPropertyValue('--red-500'),
+                            backgroundColor: documentStyle.getPropertyValue('--brand-earth-500'),
+                            borderColor: documentStyle.getPropertyValue('--brand-earth-500'),
                             data: this.obtenerNoDetecciones(this.detections![1])
                         }
                     ]
@@ -126,14 +127,14 @@ export class DashboardComponent implements OnInit {
                     datasets: [
                         {
                             label: 'Positivos',
-                            backgroundColor: documentStyle.getPropertyValue('--green-500'),
-                            borderColor: documentStyle.getPropertyValue('--green-500'),
+                            backgroundColor: documentStyle.getPropertyValue('--brand-green-500'),
+                            borderColor: documentStyle.getPropertyValue('--brand-green-500'),
                             data: this.obtenerDetecciones(this.detections![1])
                         },
                         {
                             label: 'Negatius',
-                            backgroundColor: documentStyle.getPropertyValue('--red-500'),
-                            borderColor: documentStyle.getPropertyValue('--red-500'),
+                            backgroundColor: documentStyle.getPropertyValue('--brand-earth-500'),
+                            borderColor: documentStyle.getPropertyValue('--brand-earth-500'),
                             data: this.obtenerNoDetecciones(this.detections![1])
                         }
                     ]

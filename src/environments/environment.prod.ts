@@ -1,4 +1,7 @@
+const hostname = globalThis.location?.hostname ?? 'localhost';
+const protocol = hostname === 'localhost' || hostname === '127.0.0.1' ? 'http' : globalThis.location?.protocol.replace(':', '') || 'https';
+
 export const environment = {
   production: true,
-  apiHost: 'https://guaitaia.capydata.tech:9000',
+  apiHost: `${protocol}://${hostname}:9000`,
 };

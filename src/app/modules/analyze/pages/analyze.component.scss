@@ -13,3 +13,60 @@
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link{
     border-color: #f7b500;
 }
+
+.analyze-preview {
+    padding-top: 1rem;
+}
+
+.analyze-preview__title {
+    margin: 0 0 1rem;
+    color: var(--text-color);
+}
+
+.analyze-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.analyze-preview__card {
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    border-radius: calc(var(--border-radius) - 0.125rem);
+    background: var(--surface-card);
+    box-shadow: 0 12px 24px rgba(82, 64, 28, 0.08);
+}
+
+.analyze-preview__viewer {
+    display: block;
+}
+
+.analyze-preview__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--surface-ground);
+    cursor: zoom-in;
+}
+
+.analyze-preview__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.85rem 1rem 1rem;
+}
+
+.analyze-preview__name {
+    font-weight: 700;
+    color: var(--text-color);
+    overflow-wrap: anywhere;
+}
+
+.analyze-preview__size {
+    color: var(--text-color-secondary);
+}
+
+.analyze-results {
+    margin-top: 1.5rem;
+}

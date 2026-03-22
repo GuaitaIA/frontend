@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../services/users.service';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { UsersService } from '../services/users.service';
     DialogModule,
     InputTextModule,
     SelectModule,
+    ToastModule,
     ReactiveFormsModule,
     FormsModule,
     UsersRoutingModule

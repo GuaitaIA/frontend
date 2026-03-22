@@ -7,14 +7,24 @@
                     <div>
                         <label for="email" class="block text-900 text-xl font-medium mb-2">Email</label>
                         <input id="email" formControlName="email" type="text" placeholder="Email address" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem">
+                        <small class="p-error block mb-3" *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+                            Introduce un email válido.
+                        </small>
 
                         <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
                         <p-password id="password" formControlName="password" [feedback]=false [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                        <small class="p-error block mb-3" *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+                            Introduce tu contraseña.
+                        </small>
+
+                        <div *ngIf="loginError" class="p-3 mb-4 border-round surface-50 border-1 border-red-200 text-red-700">
+                            {{ loginError }}
+                        </div>
 
                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
                             <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>
                         </div>
-                        <button type="submit" pButton pRipple label="Entrar" class="w-full p-3 text-xl"></button>
+                        <button type="submit" pButton pRipple label="Entrar" class="w-full p-3 text-xl" [loading]="isLoading" [disabled]="isLoading"></button>
                     </div>
                 </form>
             </div>

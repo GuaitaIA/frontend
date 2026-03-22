@@ -1,55 +1,142 @@
-<div class="flex flex-row-reverse flex-wrap mb-4">
-    <div class="flex align-items-center justify-content-center">
-        <p-button label="Añadir" (click)="add()"></p-button>
+<p-toast></p-toast>
+
+<div class="card users-page">
+    <div class="users-page__header">
+        <div>
+            <h2 class="users-page__title">Gestion de usuarios</h2>
+            <p class="users-page__subtitle">Alta, edicion y eliminacion de cuentas del sistema.</p>
+        </div>
+        <div class="users-page__actions">
+            <p-button label="Recargar" icon="pi pi-refresh" styleClass="p-button-text" (click)="loadData()"></p-button>
+            <p-button label="Nuevo usuario" icon="pi pi-plus" (click)="add()"></p-button>
+        </div>
     </div>
-</div>
-<div class="mb-4">
-    <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+
+    <p-table
+        [value]="users"
+        [loading]="loading"
+        [tableStyle]="{ 'min-width': '60rem' }"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+        [showCurrentPageReport]="true"
+        dataKey="id">
         <ng-template pTemplate="header">
             <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th style="width: 5rem"></th>
-                <th style="width: 5rem"></th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Zona</th>
+                <th>Estado</th>
+                <th class="users-page__actions-column">Acciones</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-user>
             <tr>
-                <td>{{ product.code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.quantity }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.timezone || 'Europe/Madrid' }}</td>
                 <td>
-                    <p-button icon="pi pi-user-edit" (click)="add()"></p-button>
+                    <span class="users-page__status" [class.users-page__status--inactive]="!user.is_active">
+                        {{ user.is_active ? 'Activo' : 'Inactivo' }}
+                    </span>
                 </td>
-                <td>
-                    <p-button styleClass="p-button-danger" icon="pi pi-trash"></p-button>
+                <td class="users-page__row-actions">
+                    <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-success" (click)="edit(user)"></p-button>
+                    <p-button icon="pi pi-trash" styleClass="p-button-text p-button-danger" (click)="askDelete(user)"></p-button>
                 </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-5">No hay usuarios disponibles.</td>
             </tr>
         </ng-template>
     </p-table>
-    <p-dialog header="Añadir usuario" [(visible)]="visible" [style]="{width: '90vw', height: '50vh'}">
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="formgrid grid">
-                <div class="field col-12 sm:col-6">
-                    <label for="email">Email</label>
-                    <input id="email" formControlName="email" type="text" pInputText  class="w-full">
-                </div>
-                <div class="field col-12 sm:col-6">
-                    <label for="role">Rol</label>
-                    <p-select formControlName="role" [options]="roles" optionLabel="name" [showClear]="true" placeholder="Seleccione rol" class="w-full"></p-select>
-                </div>
-    
-                <div class="field col-12 sm:col-6">
-                    <label for="zones_id">Zona</label>
-                    <p-select formControlName="zones_id" [options]="zones" optionLabel="name" [showClear]="true" placeholder="Seleccione zona" class="w-full"></p-select>
-                </div>
-                <div class="field col-12 sm:col-12">
-                    <p-button type="submit" label="Guardar"></p-button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
 </div>
+
+<p-dialog
+    [header]="editingUser ? 'Editar usuario' : 'Nuevo usuario'"
+    [(visible)]="visible"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '42rem', maxWidth: '95vw' }"
+    (onHide)="closeDialog()">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="formgrid grid">
+        <div class="field col-12">
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" type="email" pInputText class="w-full">
+            <small class="p-error" *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched || submitting)">
+                Introduce un email valido.
+            </small>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="role">Rol</label>
+            <p-select
+                inputId="role"
+                formControlName="role"
+                [options]="roles"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecciona un rol"
+                class="w-full">
+            </p-select>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="zones_id">Zona</label>
+            <p-select
+                inputId="zones_id"
+                formControlName="zones_id"
+                [options]="zones"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecciona una zona"
+                class="w-full">
+            </p-select>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="is_active">Estado</label>
+            <p-select
+                inputId="is_active"
+                formControlName="is_active"
+                [options]="statuses"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full">
+            </p-select>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="password">{{ editingUser ? 'Nueva contrasena (opcional)' : 'Contrasena' }}</label>
+            <input id="password" formControlName="password" type="password" pInputText class="w-full">
+            <small class="p-error" *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched || submitting)">
+                La contrasena es obligatoria para crear un usuario.
+            </small>
+        </div>
+
+        <div class="col-12 users-page__dialog-actions">
+            <p-button type="button" label="Cancelar" styleClass="p-button-text" (click)="closeDialog()"></p-button>
+            <p-button type="submit" [label]="editingUser ? 'Guardar cambios' : 'Crear usuario'"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog
+    header="Eliminar usuario"
+    [(visible)]="deleteVisible"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '28rem', maxWidth: '90vw' }"
+    (onHide)="closeDeleteDialog()">
+    <div class="users-page__delete-copy">
+        <i class="pi pi-exclamation-triangle users-page__delete-icon"></i>
+        <p>Se eliminara el usuario <strong>{{ userToDelete?.email }}</strong>. Esta accion no se puede deshacer.</p>
+    </div>
+    <div class="users-page__dialog-actions">
+        <p-button type="button" label="Cancelar" styleClass="p-button-text" (click)="closeDeleteDialog()"></p-button>
+        <p-button type="button" label="Eliminar" styleClass="p-button-danger" (click)="confirmDelete()"></p-button>
+    </div>
+</p-dialog>

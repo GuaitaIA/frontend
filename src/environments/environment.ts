@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiHost: 'http://localhost:9000',
+  apiHost: 'http://127.0.0.1:9000',
 };
 
 /*

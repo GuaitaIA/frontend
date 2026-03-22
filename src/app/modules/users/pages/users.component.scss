@@ -5,3 +5,88 @@
 .p-select {
     display: flex !important;
 }
+
+.users-page__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.users-page__title {
+    margin: 0;
+}
+
+.users-page__subtitle {
+    margin: 0.35rem 0 0;
+    color: var(--p-text-muted-color);
+}
+
+.users-page__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.users-page__actions-column {
+    width: 9rem;
+}
+
+.users-page__row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.users-page__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(62, 159, 39, 0.14);
+    color: #25631a;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.users-page__status--inactive {
+    background: rgba(176, 33, 46, 0.12);
+    color: #8f1c26;
+}
+
+.users-page__dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.users-page__delete-copy {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.users-page__delete-copy p {
+    margin: 0;
+}
+
+.users-page__delete-icon {
+    font-size: 1.5rem;
+    color: var(--p-orange-500);
+}
+
+@media (max-width: 768px) {
+    .users-page__header {
+        flex-direction: column;
+    }
+
+    .users-page__actions,
+    .users-page__dialog-actions {
+        width: 100%;
+    }
+}

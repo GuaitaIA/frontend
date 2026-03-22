@@ -33,6 +33,18 @@
             <p-select [options]="cpus" [(ngModel)]="cpu" optionLabel="name"></p-select>
         </div>
     </div>
+
+    <div class="flex-auto">
+        <div class="form-group">
+            <p-select
+                [options]="models"
+                [(ngModel)]="selectedModel"
+                optionLabel="name"
+                placeholder="Selecciona modelo"
+                [disabled]="!models.length">
+            </p-select>
+        </div>
+    </div>
 </div>
 
 @if (activeTab === 'images') {

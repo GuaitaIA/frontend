@@ -1,6 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
+export interface AnalyzeModel {
+  name: string;
+  is_default: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +17,11 @@ export class AnalyzeService {
     private httpClient: HttpClient,
   ) { }
 
-  uploadFiles(files: File[], confianza: number, iou: number, cpu: any) {
+  getModels(): Observable<AnalyzeModel[]> {
+    return this.httpClient.get<AnalyzeModel[]>(`${environment.apiHost}/models`);
+  }
+
+  uploadFiles(files: File[], confianza: number, iou: number, cpu: any, modelName: string) {
     const formData = new FormData();
 
     files.forEach(file => {
@@ -21,11 +31,12 @@ export class AnalyzeService {
     formData.append('confianza', confianza.toString());
     formData.append('iou', iou.toString());
     formData.append('cpu', cpu.code.toString());
+    formData.append('model_name', modelName);
 
     return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios/`, formData);
   }
 
-  uploadStrings(urls: string[], confianza: number, iou: number, cpu: any) {
+  uploadStrings(urls: string[], confianza: number, iou: number, cpu: any, modelName: string) {
     const formData = new FormData();
 
     // unir las urls y separar por comas
@@ -35,6 +46,7 @@ export class AnalyzeService {
     formData.append('confianza', confianza.toString());
     formData.append('iou', iou.toString());
     formData.append('cpu', cpu.code.toString());
+    formData.append('model_name', modelName);
 
     return this.httpClient.post<any>(`${environment.apiHost}/detectar_incendios/`, formData);
   }

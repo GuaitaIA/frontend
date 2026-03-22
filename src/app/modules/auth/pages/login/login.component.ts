@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AuthService } from '../../services/auth.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent{
     public loginForm: FormGroup;
     public isLoading: boolean;
     public returnUrl: string;
+    public loginError: string;
 
     constructor(
         public layoutService: LayoutService,
@@ -33,6 +35,7 @@ export class LoginComponent{
         private route: ActivatedRoute,
     ) { 
         this.isLoading = false;
+        this.loginError = '';
 
         // redirect to home if already logged in
         if (this.authService.currentUserValue) {
@@ -51,7 +54,17 @@ export class LoginComponent{
     }
 
     onSubmit(loginForm: FormGroup) {
-        this.authService.login(loginForm.value.email, loginForm.value.password).subscribe(
+        this.loginError = '';
+
+        if (loginForm.invalid) {
+            loginForm.markAllAsTouched();
+            return;
+        }
+
+        this.isLoading = true;
+        this.authService.login(loginForm.value.email, loginForm.value.password).pipe(
+            finalize(() => this.isLoading = false)
+        ).subscribe(
             response => {
                 if (response) {
                     this.router.navigate([this.returnUrl])
@@ -59,9 +72,27 @@ export class LoginComponent{
             },
             error => {
                 console.log('LoginComponent: onSubmit: error', error);
+                this.loginError = this.getLoginErrorMessage(error);
             }
         );
     }
 
+    private getLoginErrorMessage(error: any) {
+        const detail = error?.error?.detail;
+
+        if (detail === 'User not found' || error?.status === 404) {
+            return 'El usuario no existe.';
+        }
+
+        if (detail === 'Inactive user' || error?.status === 403) {
+            return 'Tu usuario está bloqueado. Contacta con un administrador.';
+        }
+
+        if (detail === 'Incorrect password' || error?.status === 401) {
+            return 'La contraseña no es correcta.';
+        }
+
+        return 'No se ha podido iniciar sesión.';
+    }
 
 }

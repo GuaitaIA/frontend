@@ -2,13 +2,17 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileUploadHandlerEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
-import { AnalyzeService } from '../services/analyze.service';
+import { AnalyzeModel, AnalyzeService } from '../services/analyze.service';
 import { environment } from '../../../../environments/environment';
 
 interface Cpu {
   name: string;
   code: number;
   disabled?: boolean;
+}
+
+interface ModelOption {
+  name: string;
 }
 
 @Component({
@@ -29,6 +33,7 @@ export class AnalyzeComponent implements OnInit {
     { name: 'CPU', code: 1 },
     { name: 'GPU', code: 0, disabled: true },
   ];
+  public models: ModelOption[] = [];
 
   formulario!: FormGroup;
 
@@ -38,6 +43,7 @@ export class AnalyzeComponent implements OnInit {
   confianza = 0.5;
   iou = 0.5;
   cpu = this.cpus[0];
+  selectedModel: ModelOption | null = null;
 
   constructor(
     private analyzeService: AnalyzeService,
@@ -47,6 +53,7 @@ export class AnalyzeComponent implements OnInit {
 
   ngOnInit() {
     this.resetForm();
+    this.loadModels();
   }
 
   ngOnDestroy() {
@@ -54,26 +61,24 @@ export class AnalyzeComponent implements OnInit {
   }
 
   onUpload(event: FileUploadHandlerEvent) {
-    if (this.confianza && this.iou && this.cpu) {
+    if (this.confianza && this.iou && this.cpu && this.selectedModel) {
       this.analyze = true;
       this.uploadedFiles = [...event.files];
 
-      this.analyzeService.uploadFiles(this.uploadedFiles, this.confianza, this.iou, this.cpu).subscribe(
+      this.analyzeService.uploadFiles(this.uploadedFiles, this.confianza, this.iou, this.cpu, this.selectedModel.name).subscribe(
         (response) => {
           this.results = response;
           this.analyze = false;
         },
         (error) => {
           console.log(error);
-          if (error === 'Not allowed at this time') {
-            this.results = [];
-            this.analyze = false;
-            this.showMessage();
-          }
+          this.results = [];
+          this.analyze = false;
+          this.showMessage(this.getErrorDetail(error));
         }
       );
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Los datos no pueden estar vacios.' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Selecciona modelo, confianza, IOU y dispositivo.' });
     }
   }
 
@@ -106,11 +111,16 @@ export class AnalyzeComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.selectedModel) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Selecciona un modelo antes de analizar.' });
+      return;
+    }
+
     this.show = false;
     this.analyze = true;
     this.results = [];
 
-    this.analyzeService.uploadStrings(this.formulario.value.urls, this.confianza, this.iou, this.cpu).subscribe(
+    this.analyzeService.uploadStrings(this.formulario.value.urls, this.confianza, this.iou, this.cpu, this.selectedModel.name).subscribe(
       (response) => {
         this.results = response;
         this.analyze = false;
@@ -118,6 +128,7 @@ export class AnalyzeComponent implements OnInit {
       (error) => {
         console.log(error);
         this.analyze = false;
+        this.showMessage(this.getErrorDetail(error));
       }
     );
   }
@@ -128,8 +139,8 @@ export class AnalyzeComponent implements OnInit {
     this.resetForm();
   }
 
-  showMessage() {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fora de servei' });
+  showMessage(detail = 'Fora de servei') {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail });
   }
 
   getPreviewUrl(file: File): string {
@@ -165,6 +176,28 @@ export class AnalyzeComponent implements OnInit {
     this.formulario = this.fb.group({
       urls: this.fb.array([this.fb.control('', Validators.required)]),
     });
+  }
+
+  private loadModels() {
+    this.analyzeService.getModels().subscribe({
+      next: (models: AnalyzeModel[]) => {
+        this.models = models.map(model => ({ name: model.name }));
+        const defaultModel = models.find(model => model.is_default) ?? models[0];
+        this.selectedModel = defaultModel ? { name: defaultModel.name } : null;
+
+        if (!this.selectedModel) {
+          this.messageService.add({ severity: 'warn', summary: 'Modelos', detail: 'No hay modelos disponibles en la carpeta model.' });
+        }
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({ severity: 'error', summary: 'Modelos', detail: 'No se pudieron cargar los modelos.' });
+      }
+    });
+  }
+
+  private getErrorDetail(error: any) {
+    return error?.error?.detail ?? 'Fora de servei';
   }
 
   private syncPreviewUrls(files: File[]) {

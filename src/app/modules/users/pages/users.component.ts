@@ -1,23 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UsersService } from '../services/users.service';
+import { finalize, forkJoin } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { UserItem, UsersService } from '../services/users.service';
 
-interface Product {
-  name: string;
-  code: number;
-  category: string;
-  quantity: number;
-}
-
-interface Zones {
-  id: number;
-  name: string;
-}
-
-interface Roles {
-  id: number;
-  name: string;
+interface SelectOption<T> {
+  label: string;
+  value: T;
 }
 
 @Component({
@@ -27,16 +16,27 @@ interface Roles {
     styleUrls: ['./users.component.scss'],
     standalone: false
 })
+export class UsersComponent implements OnInit {
 
-export class UsersComponent {
+  users: UserItem[] = [];
+  zones: SelectOption<number>[] = [];
+  roles: SelectOption<string>[] = [
+    { label: 'Superadmin', value: 'superadmin' },
+    { label: 'Usuario', value: 'user' },
+  ];
+  statuses: SelectOption<boolean>[] = [
+    { label: 'Activo', value: true },
+    { label: 'Inactivo', value: false },
+  ];
 
-  products!: Product[];
-  zones!: Zones[];
-  roles!: Roles[];
+  visible = false;
+  deleteVisible = false;
+  loading = false;
+  submitting = false;
+  editingUser: UserItem | null = null;
+  userToDelete: UserItem | null = null;
 
-  visible: boolean = false;
-
-  form: FormGroup;
+  form!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,55 +45,151 @@ export class UsersComponent {
   ) { }
 
   ngOnInit() {
-    // generate rondom Products
-    this.products = this.generateProducts();
-
-    this.zones = [
-      { id: 1, name: 'Europe/Madrid' },
-    ];
-
-    this.roles = [
-      { id: 1, name: 'superadmin' },
-      { id: 2, name: 'user' },
-    ];
-
     this.form = this.formBuilder.group({
-      email: ['', Validators.required],
-      role: ['', Validators.required],
-      zones_id: ['', Validators.required],
-      password: ['test', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['user', Validators.required],
+      zones_id: [null, Validators.required],
+      password: ['', Validators.required],
+      is_active: [true, Validators.required],
+    });
+
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading = true;
+
+    forkJoin({
+      users: this.usersService.getUsers(),
+      zones: this.usersService.getZones(),
+    }).pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: ({ users, zones }) => {
+        this.users = users;
+        this.zones = zones.map(zone => ({
+          label: `${zone.timezone} (${zone.start_time}:00-${zone.end_time}:00)`,
+          value: zone.id,
+        }));
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Usuarios', detail: this.getErrorMessage(error, 'No se pudieron cargar los usuarios') });
+      }
     });
   }
 
-  generateProducts(): Product[] {
-    let products: Product[] = [];
-    for (let i = 0; i < 100; i++) {
-      products.push({
-        name: 'Product ' + i,
-        code: i,
-        category: 'Category ' + i % 8,
-        quantity: Math.floor(Math.random() * 1000)
-      });
-    }
-    return products;
-  }
-
   add() {
+    this.editingUser = null;
+    this.userToDelete = null;
+    this.setPasswordRequired(true);
+    this.form.reset({
+      email: '',
+      role: 'user',
+      zones_id: this.zones[0]?.value ?? null,
+      password: '',
+      is_active: true,
+    });
     this.visible = true;
   }
 
-  submit() {
-    if(this.form.valid) {
-      this.usersService.create(this.form.value).subscribe(
-        (response) => {
-          console.log(response);
-          this.visible = false;
-          this.messageService.add({ severity: 'success', summary: 'Usuario', detail: 'Usuario creado correctamente' });
-        }, (error) => {
-          console.log(error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al crear el usuario' });
-        });
-    }
+  edit(user: UserItem) {
+    this.editingUser = user;
+    this.setPasswordRequired(false);
+    this.form.reset({
+      email: user.email,
+      role: user.role,
+      zones_id: user.zones_id ?? this.zones[0]?.value ?? null,
+      password: '',
+      is_active: user.is_active,
+    });
+    this.visible = true;
   }
 
+  askDelete(user: UserItem) {
+    this.userToDelete = user;
+    this.deleteVisible = true;
+  }
+
+  closeDialog() {
+    this.visible = false;
+    this.submitting = false;
+    this.editingUser = null;
+  }
+
+  closeDeleteDialog() {
+    this.deleteVisible = false;
+    this.userToDelete = null;
+  }
+
+  submit() {
+    this.submitting = true;
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const rawValue = this.form.getRawValue();
+    const payload = {
+      email: rawValue.email.trim(),
+      role: rawValue.role,
+      zones_id: rawValue.zones_id,
+      is_active: rawValue.is_active,
+      password: rawValue.password?.trim() || undefined,
+    };
+
+    const request = this.editingUser
+      ? this.usersService.update(this.editingUser.id, payload)
+      : this.usersService.create(payload);
+    const isEditing = !!this.editingUser;
+
+    request.subscribe({
+      next: () => {
+        this.closeDialog();
+        this.loadData();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Usuarios',
+          detail: isEditing ? 'Usuario actualizado correctamente' : 'Usuario creado correctamente'
+        });
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Usuarios', detail: this.getErrorMessage(error, 'No se pudo guardar el usuario') });
+      }
+    });
+  }
+
+  confirmDelete() {
+    if (!this.userToDelete) {
+      return;
+    }
+
+    this.usersService.remove(this.userToDelete.id).subscribe({
+      next: () => {
+        this.closeDeleteDialog();
+        this.loadData();
+        this.messageService.add({ severity: 'success', summary: 'Usuarios', detail: 'Usuario eliminado correctamente' });
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Usuarios', detail: this.getErrorMessage(error, 'No se pudo eliminar el usuario') });
+      }
+    });
+  }
+
+  private setPasswordRequired(required: boolean) {
+    const passwordControl = this.form.get('password');
+    if (!passwordControl) {
+      return;
+    }
+
+    passwordControl.setValidators(required ? [Validators.required] : []);
+    passwordControl.updateValueAndValidity();
+  }
+
+  private getErrorMessage(error: any, fallback: string) {
+    return error?.error?.detail ?? fallback;
+  }
 }

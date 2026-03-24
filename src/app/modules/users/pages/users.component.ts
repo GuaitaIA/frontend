@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, forkJoin } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { UserItem, UsersService } from '../services/users.service';
+import { RoleHierarchyItem, UserItem, UsersService } from '../services/users.service';
 
 interface SelectOption<T> {
   label: string;
@@ -20,10 +20,8 @@ export class UsersComponent implements OnInit {
 
   users: UserItem[] = [];
   zones: SelectOption<number>[] = [];
-  roles: SelectOption<string>[] = [
-    { label: 'Superadmin', value: 'superadmin' },
-    { label: 'Usuario', value: 'user' },
-  ];
+  rolesHierarchy: RoleHierarchyItem[] = [];
+  roles: SelectOption<string>[] = [];
   statuses: SelectOption<boolean>[] = [
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
@@ -47,7 +45,7 @@ export class UsersComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      role: ['user', Validators.required],
+      role: ['', Validators.required],
       zones_id: [null, Validators.required],
       password: ['', Validators.required],
       is_active: [true, Validators.required],
@@ -62,15 +60,25 @@ export class UsersComponent implements OnInit {
     forkJoin({
       users: this.usersService.getUsers(),
       zones: this.usersService.getZones(),
+      roles: this.usersService.getRoles(),
     }).pipe(
       finalize(() => this.loading = false)
     ).subscribe({
-      next: ({ users, zones }) => {
+      next: ({ users, zones, roles }) => {
         this.users = users;
+        this.rolesHierarchy = roles;
+        this.roles = this.buildRoleOptions(roles);
         this.zones = zones.map(zone => ({
           label: `${zone.timezone} (${zone.start_time}:00-${zone.end_time}:00)`,
           value: zone.id,
         }));
+
+        if (!this.editingUser && !this.visible) {
+          this.form.patchValue({
+            role: this.getDefaultRoleValue(),
+            zones_id: this.zones[0]?.value ?? null,
+          }, { emitEvent: false });
+        }
       },
       error: (error) => {
         console.error(error);
@@ -85,7 +93,7 @@ export class UsersComponent implements OnInit {
     this.setPasswordRequired(true);
     this.form.reset({
       email: '',
-      role: 'user',
+      role: this.getDefaultRoleValue(),
       zones_id: this.zones[0]?.value ?? null,
       password: '',
       is_active: true,
@@ -177,6 +185,22 @@ export class UsersComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Usuarios', detail: this.getErrorMessage(error, 'No se pudo eliminar el usuario') });
       }
     });
+  }
+
+  formatRoleName(role: string) {
+    return (role || '').trim();
+  }
+
+  private buildRoleOptions(roles: RoleHierarchyItem[]) {
+    return roles.map(role => ({
+      label: `${'\u00A0\u00A0\u00A0'.repeat(role.depth)}${role.depth ? '↳ ' : ''}${this.formatRoleName(role.name)}`,
+      value: role.name,
+    }));
+  }
+
+  private getDefaultRoleValue() {
+    const userRole = this.rolesHierarchy.find(role => role.name === 'user');
+    return userRole?.name ?? this.rolesHierarchy[0]?.name ?? '';
   }
 
   private setPasswordRequired(required: boolean) {

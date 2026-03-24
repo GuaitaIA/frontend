@@ -31,16 +31,27 @@ export class ResultComponent {
   formGroup!: FormGroup;
 
     ngOnInit() {
-      this.resultService.getResultsDates().subscribe((data) => {
-        this.dates = data;
-      });
-
       this.formGroup = new FormGroup({
           selectedCity: new FormControl<City | null>(null)
+      });
+
+      this.resultService.getResultsDates().subscribe((data) => {
+        this.dates = [...data].sort((left, right) => right.date.localeCompare(left.date));
+
+        if (this.dates.length) {
+          const latestDate = this.dates[0];
+          this.formGroup.patchValue({ selectedCity: latestDate }, { emitEvent: false });
+          this.onChange(latestDate);
+        }
       });
     } 
 
     onChange(newValue) {
+      if (!newValue?.date) {
+        this.images = [];
+        return;
+      }
+
       this.date = newValue.date;
       this.resultService.getResultsByDate(newValue.date).subscribe((data) => {
         this.images = data;

@@ -19,12 +19,29 @@ export interface ZoneItem {
   end_time: number;
 }
 
+export interface RoleHierarchyItem {
+  id: number;
+  name: string;
+  description?: string | null;
+  parent_id?: number | null;
+  parent_name?: string | null;
+  depth: number;
+  users_count: number;
+  is_protected: boolean;
+}
+
 export interface UserPayload {
   email: string;
   role: string;
   zones_id: number;
   is_active: boolean;
   password?: string;
+}
+
+export interface RolePayload {
+  name: string;
+  description?: string;
+  parent_id?: number | null;
 }
 
 @Injectable({
@@ -44,6 +61,10 @@ export class UsersService {
     return this.httpClient.get<ZoneItem[]>(`${environment.apiHost}/zones`);
   }
 
+  getRoles(): Observable<RoleHierarchyItem[]> {
+    return this.httpClient.get<RoleHierarchyItem[]>(`${environment.apiHost}/roles`);
+  }
+
   create(form: UserPayload) {
     return this.httpClient.post<any>(`${environment.apiHost}/user/create`, this.buildFormData(form));
   }
@@ -56,6 +77,18 @@ export class UsersService {
     return this.httpClient.delete<any>(`${environment.apiHost}/user/${userId}`);
   }
 
+  createRole(form: RolePayload) {
+    return this.httpClient.post<any>(`${environment.apiHost}/roles`, this.buildRoleFormData(form));
+  }
+
+  updateRole(roleId: number, form: RolePayload) {
+    return this.httpClient.put<any>(`${environment.apiHost}/roles/${roleId}`, this.buildRoleFormData(form));
+  }
+
+  removeRole(roleId: number) {
+    return this.httpClient.delete<any>(`${environment.apiHost}/roles/${roleId}`);
+  }
+
   private buildFormData(form: UserPayload) {
     const formData = new FormData();
 
@@ -66,6 +99,19 @@ export class UsersService {
 
     if (form.password) {
       formData.append('password', form.password);
+    }
+
+    return formData;
+  }
+
+  private buildRoleFormData(form: RolePayload) {
+    const formData = new FormData();
+
+    formData.append('name', form.name);
+    formData.append('description', form.description?.trim() || '');
+
+    if (form.parent_id !== null && form.parent_id !== undefined) {
+      formData.append('parent_id', String(form.parent_id));
     }
 
     return formData;

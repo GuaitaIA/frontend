@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { Router } from '@angular/router';
 import { AuthService } from '../modules/auth/services/auth.service';
 import { LayoutService } from "./service/app.layout.service";
 
@@ -20,10 +21,17 @@ export class AppTopBarComponent {
 
     constructor(
         public layoutService: LayoutService,
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ) { }
 
+    openSettings() {
+        this.layoutService.state.profileSidebarVisible = false;
+        void this.router.navigate(['/settings']);
+    }
+
     logout() {
+        this.layoutService.state.profileSidebarVisible = false;
         this.authService.logout();
     }
 }

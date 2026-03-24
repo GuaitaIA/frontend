@@ -1,0 +1,63 @@
+<p-toast></p-toast>
+
+<div class="card settings-page" [class.settings-page--loading]="loading">
+    <div class="settings-page__header">
+        <div>
+            <h2 class="settings-page__title">Ajustes</h2>
+            <p class="settings-page__subtitle">Configura si quieres recibir avisos cuando otro usuario registre una columna de humo.</p>
+        </div>
+        <div class="settings-page__actions">
+            <p-button label="Recargar" icon="pi pi-refresh" styleClass="p-button-text" (click)="loadSettings()"></p-button>
+        </div>
+    </div>
+
+    <form [formGroup]="form" class="settings-page__form" (ngSubmit)="save()">
+        <div class="settings-page__panel">
+            <div class="settings-page__panel-copy">
+                <h3 class="settings-page__panel-title">Notificaciones de detecciones</h3>
+                <p class="settings-page__panel-text">
+                    Si otro usuario de la jerarquia genera una deteccion positiva de columna de humo, recibirás un toast en la aplicación.
+                </p>
+            </div>
+
+            <label class="settings-page__toggle" for="notifications_enabled">
+                <p-checkbox
+                    inputId="notifications_enabled"
+                    formControlName="notifications_enabled"
+                    [binary]="true">
+                </p-checkbox>
+                <span>{{ form.get('notifications_enabled')?.value ? 'Activadas' : 'Desactivadas' }}</span>
+            </label>
+        </div>
+
+        <div class="settings-page__panel">
+            <div class="settings-page__panel-copy">
+                <h3 class="settings-page__panel-title">Sonido de alerta</h3>
+                <p class="settings-page__panel-text">
+                    Reproduce la sirena de aviso cuando llegue una nueva notificación de detección.
+                </p>
+            </div>
+
+            <label class="settings-page__toggle" for="notification_sound_enabled">
+                <p-checkbox
+                    inputId="notification_sound_enabled"
+                    formControlName="notification_sound_enabled"
+                    [binary]="true">
+                </p-checkbox>
+                <span>{{ form.get('notification_sound_enabled')?.value ? 'Activado' : 'Desactivado' }}</span>
+            </label>
+
+            <p-button
+                label="Probar sonido"
+                icon="pi pi-volume-up"
+                styleClass="p-button-text"
+                [disabled]="!form.get('notification_sound_enabled')?.value"
+                (onClick)="testSound()">
+            </p-button>
+        </div>
+
+        <div class="settings-page__save">
+            <p-button type="submit" label="Guardar ajustes" icon="pi pi-save" [loading]="saving"></p-button>
+        </div>
+    </form>
+</div>

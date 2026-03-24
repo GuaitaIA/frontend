@@ -40,7 +40,7 @@ export class AnalyzeComponent implements OnInit {
   show = true;
   activeTab: 'images' | 'urls' = 'images';
 
-  confianza = 0.5;
+  confianza = 0.1;
   iou = 0.5;
   cpu = this.cpus[0];
   selectedModel: ModelOption | null = null;
@@ -139,7 +139,7 @@ export class AnalyzeComponent implements OnInit {
     this.resetForm();
   }
 
-  showMessage(detail = 'Fora de servei') {
+  showMessage(detail = 'Servicio no disponible') {
     this.messageService.add({ severity: 'error', summary: 'Error', detail });
   }
 
@@ -197,7 +197,11 @@ export class AnalyzeComponent implements OnInit {
   }
 
   private getErrorDetail(error: any) {
-    return error?.error?.detail ?? 'Fora de servei';
+    if (typeof error?.error === 'string' && error.error.trim()) {
+      return error.error;
+    }
+
+    return error?.error?.detail ?? error?.message ?? 'Servicio no disponible';
   }
 
   private syncPreviewUrls(files: File[]) {

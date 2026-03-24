@@ -7,6 +7,7 @@
             <p class="users-page__subtitle">Alta, edicion y eliminacion de cuentas del sistema.</p>
         </div>
         <div class="users-page__actions">
+            <p-button label="Jerarquia de roles" icon="pi pi-sitemap" styleClass="p-button-text" routerLink="/roles"></p-button>
             <p-button label="Recargar" icon="pi pi-refresh" styleClass="p-button-text" (click)="loadData()"></p-button>
             <p-button label="Nuevo usuario" icon="pi pi-plus" (click)="add()"></p-button>
         </div>
@@ -34,7 +35,7 @@
         <ng-template pTemplate="body" let-user>
             <tr>
                 <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
+                <td>{{ formatRoleName(user.role) }}</td>
                 <td>{{ user.timezone || 'Europe/Madrid' }}</td>
                 <td>
                     <span class="users-page__status" [class.users-page__status--inactive]="!user.is_active">
@@ -79,6 +80,7 @@
                 [options]="roles"
                 optionLabel="label"
                 optionValue="value"
+                appendTo="body"
                 placeholder="Selecciona un rol"
                 class="w-full">
             </p-select>
@@ -92,6 +94,7 @@
                 [options]="zones"
                 optionLabel="label"
                 optionValue="value"
+                appendTo="body"
                 placeholder="Selecciona una zona"
                 class="w-full">
             </p-select>
@@ -105,6 +108,7 @@
                 [options]="statuses"
                 optionLabel="label"
                 optionValue="value"
+                appendTo="body"
                 class="w-full">
             </p-select>
         </div>

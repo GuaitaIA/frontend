@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PrimeNG } from 'primeng/config';
+import { NotificationCenterService } from './core/services/notification-center.service';
 import { LayoutService } from './layout/service/app.layout.service';
 
 @Component({
@@ -13,11 +14,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     constructor(
         private primeng: PrimeNG,
-        private layoutService: LayoutService
+        private layoutService: LayoutService,
+        private notificationCenterService: NotificationCenterService
     ) {}
 
     ngOnInit() {
         this.applyPrimeNGConfig();
+        this.notificationCenterService.initialize();
         this.configSubscription = this.layoutService.configUpdate$.subscribe(() => {
             this.applyPrimeNGConfig();
         });

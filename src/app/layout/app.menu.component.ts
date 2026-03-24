@@ -19,9 +19,10 @@ export class AppMenuComponent implements OnInit {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                    { label: 'Operador', icon: 'pi pi-fw pi-video', routerLink: ['/operator'] },
                     { label: 'Analizar', icon: 'pi pi-fw pi-camera', routerLink: ['/analyze'] },
                     { label: 'Resultados', icon: 'pi pi-fw pi-images', routerLink: ['/result'] },
-                    { label: 'Usarios', icon: 'pi pi-fw pi-users', routerLink: ['/users'] }
+                    { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/users'] }
                 ]
             },
         ];

@@ -1,0 +1,227 @@
+<div class="operator-console">
+  <div class="operator-console__toolbar">
+    <div class="operator-console__meta">
+      <div>
+        <span class="operator-console__meta-label">Fecha activa</span>
+        <strong>{{ selectedDate }}</strong>
+      </div>
+      <div>
+        <span class="operator-console__meta-label">Última actualización</span>
+        <strong>{{ refreshLabel }}</strong>
+      </div>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Actualizar"
+      icon="pi pi-refresh"
+      severity="info"
+      [disabled]="loading"
+      (click)="manualRefresh()"></button>
+  </div>
+
+  @if (availableDates.length > 1) {
+    <div class="operator-console__dates">
+      @for (date of availableDates; track date) {
+        <button
+          type="button"
+          class="operator-date-chip"
+          [class.operator-date-chip--active]="date === selectedDate"
+          (click)="selectDate(date)">
+          {{ date }}
+        </button>
+      }
+    </div>
+  }
+
+  <div class="operator-console__summary">
+    @for (card of summaryCards; track card.label) {
+      <div class="card operator-summary-card shadow-1" [ngClass]="cardClass(card.tone)">
+        <span>{{ card.label }}</span>
+        <strong>{{ card.value }}</strong>
+      </div>
+    }
+  </div>
+
+  <div class="operator-console__grid">
+    <section class="card operator-panel operator-panel--queue shadow-1">
+      <div class="operator-panel__header">
+        <div>
+          <span class="operator-console__eyebrow">Cola</span>
+          <h3>Detecciones del día</h3>
+        </div>
+        <p-tag [value]="pendingDetections + ' pendientes'" [severity]="pendingDetections ? 'warn' : 'success'"></p-tag>
+      </div>
+
+      @if (loading) {
+        <div class="operator-empty">
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Cargando datos operativos...</span>
+        </div>
+      } @else if (!detections.length) {
+        <div class="operator-empty">
+          <i class="pi pi-inbox"></i>
+          <span>No hay detecciones registradas para esta fecha.</span>
+        </div>
+      } @else {
+        <div class="operator-queue">
+          @for (detection of detections; track detection.label) {
+            <button
+              type="button"
+              class="operator-queue__item"
+              [class.operator-queue__item--active]="detection.id === selectedDetection?.id"
+              (click)="selectDetection(detection)">
+              <div class="operator-queue__thumb">
+                @if (detection.processedUrl) {
+                  <img [src]="detection.processedUrl" [alt]="detection.label">
+                } @else {
+                  <div class="operator-queue__thumb-empty">Sin imagen</div>
+                }
+              </div>
+              <div class="operator-queue__body">
+                <div class="operator-queue__top">
+                  <strong>{{ detection.label }}</strong>
+                  <p-tag [value]="statusLabel(detection.status)" [severity]="statusSeverity(detection.status)"></p-tag>
+                </div>
+                <span class="operator-queue__meta">Confianza {{ confidencePercent(detection.confidence) }}</span>
+                <span class="operator-queue__meta">{{ detection.date ? (detection.date | date:'HH:mm:ss') : 'Sin hora' }}</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="card operator-panel operator-panel--viewer shadow-1">
+      <div class="operator-panel__header">
+        <div>
+          <span class="operator-console__eyebrow">Visor</span>
+          <h3>{{ selectedDetection?.label ?? 'Sin selección' }}</h3>
+        </div>
+        @if (selectedDetection) {
+          <p-tag [value]="statusLabel(selectedDetection.status)" [severity]="statusSeverity(selectedDetection.status)"></p-tag>
+        }
+      </div>
+
+      @if (!selectedDetection) {
+        <div class="operator-empty operator-empty--viewer">
+          <i class="pi pi-image"></i>
+          <span>Selecciona una detección para verla aquí.</span>
+        </div>
+      } @else {
+        <div class="operator-viewer">
+          <div class="operator-viewer__main">
+            @if (selectedImageUrl) {
+              <p-image
+                [src]="selectedImageUrl"
+                [alt]="selectedDetection.label"
+                [preview]="true"
+                appendTo="body"
+                styleClass="operator-viewer__preview"
+                imageClass="operator-viewer__main-image"></p-image>
+            } @else {
+              <div class="operator-empty operator-empty--viewer">
+                <i class="pi pi-image"></i>
+                <span>La detección no tiene imagen procesada.</span>
+              </div>
+            }
+          </div>
+
+          <div class="operator-viewer__aside">
+            <div class="operator-viewer__stats">
+              <div>
+                <span>Confianza</span>
+                <strong>{{ confidencePercent(selectedDetection.confidence) }}</strong>
+              </div>
+              <div>
+                <span>Hora</span>
+                <strong>{{ selectedDetection.date ? (selectedDetection.date | date:'HH:mm:ss') : '--:--:--' }}</strong>
+              </div>
+              <div>
+                <span>Revisadas</span>
+                <strong>{{ reviewedDetections }}/{{ detections.length }}</strong>
+              </div>
+            </div>
+
+            <div class="operator-viewer__actions">
+              <button
+                pButton
+                type="button"
+                label="Confirmar"
+                icon="pi pi-check"
+                severity="danger"
+                [disabled]="!selectedDetection.id || updatingDecision"
+                (click)="confirmDetection()"></button>
+              <button
+                pButton
+                type="button"
+                label="Descartar"
+                icon="pi pi-times"
+                severity="secondary"
+                [outlined]="true"
+                [disabled]="!selectedDetection.id || updatingDecision"
+                (click)="discardDetection()"></button>
+            </div>
+
+            <div class="operator-viewer__original">
+              <span>Original</span>
+              @if (selectedOriginalImageUrl) {
+                <p-image
+                  [src]="selectedOriginalImageUrl"
+                  [alt]="selectedDetection.label + ' original'"
+                  [preview]="true"
+                  appendTo="body"
+                  styleClass="operator-viewer__preview operator-viewer__preview--original"
+                  imageClass="operator-viewer__original-image"></p-image>
+              } @else {
+                <div class="operator-viewer__original-empty">Sin original</div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="card operator-panel operator-panel--activity shadow-1">
+      <div class="operator-panel__header">
+        <div>
+          <span class="operator-console__eyebrow">Actividad</span>
+          <h3>Ritmo horario</h3>
+        </div>
+        @if (hourlyActivity.length) {
+          <div class="operator-activity__legend">
+            <span><i class="operator-activity__dot operator-activity__dot--positive"></i> Positivas</span>
+            <span><i class="operator-activity__dot operator-activity__dot--negative"></i> Negativas</span>
+          </div>
+        }
+      </div>
+
+      @if (!hourlyActivity.length) {
+        <div class="operator-empty">
+          <i class="pi pi-chart-bar"></i>
+          <span>Sin actividad horaria registrada para esta fecha.</span>
+        </div>
+      } @else {
+        <div class="operator-activity">
+          @for (entry of hourlyActivity; track entry.hour) {
+            <div class="operator-activity__row">
+              <div class="operator-activity__row-top">
+                <strong>{{ entry.hour }}</strong>
+                <span>{{ entry.total }} eventos</span>
+              </div>
+              <div class="operator-activity__track">
+                <div
+                  class="operator-activity__segment operator-activity__segment--positive"
+                  [style.width.%]="entry.detectionWidth"></div>
+                <div
+                  class="operator-activity__segment operator-activity__segment--negative"
+                  [style.width.%]="entry.notDetectionWidth"></div>
+              </div>
+              <small>{{ entry.detections }} detecciones / {{ entry.notDetections }} sin incendio</small>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+</div>

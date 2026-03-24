@@ -9,6 +9,19 @@
         "src/main.ts"
     ],
     "include": [
-        "src/**/*.d.ts"
+        "src/**/*.d.ts",
+        "src/app/app.component.ts",
+        "src/app/app.module.ts",
+        "src/app/app-routing.module.ts",
+        "src/app/app.constants.ts",
+        "src/app/core/**/*.ts",
+        "src/app/layout/**/*.ts",
+        "src/app/modules/operator/**/*.ts",
+        "src/app/modules/roles/**/*.ts",
+        "src/app/modules/settings/**/*.ts"
+    ],
+    "exclude": [
+        "src/test.ts",
+        "src/**/*.spec.ts"
     ]
 }

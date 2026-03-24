@@ -1,0 +1,92 @@
+.p-dialog-mask {
+    backdrop-filter: brightness(50%);
+}
+
+.p-select {
+    display: flex !important;
+}
+
+.roles-page__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.roles-page__title {
+    margin: 0;
+}
+
+.roles-page__subtitle {
+    margin: 0.35rem 0 0;
+    color: var(--p-text-muted-color);
+    max-width: 48rem;
+}
+
+.roles-page__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.roles-page__actions-column {
+    width: 9rem;
+}
+
+.roles-page__row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.roles-page__role {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2rem;
+}
+
+.roles-page__branch {
+    color: var(--p-amber-600);
+    font-weight: 700;
+}
+
+.roles-page__role-name {
+    font-weight: 600;
+    color: var(--p-surface-900);
+}
+
+.roles-page__dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.roles-page__delete-copy {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.roles-page__delete-copy p {
+    margin: 0;
+}
+
+.roles-page__delete-icon {
+    font-size: 1.5rem;
+    color: var(--p-orange-500);
+}
+
+@media (max-width: 768px) {
+    .roles-page__header {
+        flex-direction: column;
+    }
+
+    .roles-page__actions,
+    .roles-page__dialog-actions {
+        width: 100%;
+    }
+}

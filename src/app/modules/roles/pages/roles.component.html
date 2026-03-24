@@ -1,0 +1,116 @@
+<p-toast></p-toast>
+
+<div class="card roles-page">
+    <div class="roles-page__header">
+        <div>
+            <h2 class="roles-page__title">Jerarquia de roles</h2>
+            <p class="roles-page__subtitle">Solo el superadmin puede crear y ordenar los roles que luego se asignan a los usuarios.</p>
+        </div>
+        <div class="roles-page__actions">
+            <p-button label="Volver a usuarios" icon="pi pi-arrow-left" styleClass="p-button-text" routerLink="/users"></p-button>
+            <p-button label="Recargar" icon="pi pi-refresh" styleClass="p-button-text" (click)="loadRoles()"></p-button>
+            <p-button label="Nuevo rol" icon="pi pi-plus" (click)="add()"></p-button>
+        </div>
+    </div>
+
+    <p-table
+        [value]="roles"
+        [loading]="loading"
+        [tableStyle]="{ 'min-width': '68rem' }"
+        dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Rol</th>
+                <th>Depende de</th>
+                <th>Descripcion</th>
+                <th>Usuarios</th>
+                <th>Tipo</th>
+                <th class="roles-page__actions-column">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-role>
+            <tr>
+                <td>
+                    <div class="roles-page__role" [style.paddingLeft.rem]="role.depth * 1.15">
+                        <span class="roles-page__branch" *ngIf="role.depth">↳</span>
+                        <span class="roles-page__role-name">{{ formatRoleName(role.name) }}</span>
+                    </div>
+                </td>
+                <td>{{ role.parent_name ? formatRoleName(role.parent_name) : 'Raiz' }}</td>
+                <td>{{ role.description || 'Sin descripcion' }}</td>
+                <td>{{ role.users_count }}</td>
+                <td>
+                    <p-tag [severity]="role.is_protected ? 'warn' : 'secondary'" [value]="role.is_protected ? 'Protegido' : 'Personalizado'"></p-tag>
+                </td>
+                <td class="roles-page__row-actions">
+                    <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-success" (click)="edit(role)"></p-button>
+                    <p-button icon="pi pi-trash" styleClass="p-button-text p-button-danger" [disabled]="!canDelete(role)" (click)="askDelete(role)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center py-5">No hay roles disponibles.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog
+    [header]="editingRole ? 'Editar rol' : 'Nuevo rol'"
+    [(visible)]="visible"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '40rem', maxWidth: '95vw' }"
+    (onHide)="closeDialog()">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <label for="name">Nombre del rol</label>
+            <input id="name" formControlName="name" type="text" pInputText class="w-full">
+            <small class="p-error" *ngIf="form.get('name')?.invalid && (form.get('name')?.dirty || form.get('name')?.touched || submitting)">
+                El nombre del rol es obligatorio.
+            </small>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="parent_id">Rol padre</label>
+            <p-select
+                inputId="parent_id"
+                formControlName="parent_id"
+                [options]="parentOptions"
+                optionLabel="label"
+                optionValue="value"
+                appendTo="body"
+                placeholder="Selecciona el rol padre"
+                class="w-full">
+            </p-select>
+        </div>
+
+        <div class="field col-12">
+            <label for="description">Descripcion</label>
+            <input id="description" formControlName="description" type="text" pInputText class="w-full">
+        </div>
+
+        <div class="col-12 roles-page__dialog-actions">
+            <p-button type="button" label="Cancelar" styleClass="p-button-text" (click)="closeDialog()"></p-button>
+            <p-button type="submit" [label]="editingRole ? 'Guardar cambios' : 'Crear rol'"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog
+    header="Eliminar rol"
+    [(visible)]="deleteVisible"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '28rem', maxWidth: '90vw' }"
+    (onHide)="closeDeleteDialog()">
+    <div class="roles-page__delete-copy">
+        <i class="pi pi-exclamation-triangle roles-page__delete-icon"></i>
+        <p>Se eliminara el rol <strong>{{ roleToDelete ? formatRoleName(roleToDelete.name) : '' }}</strong>. Esta accion no se puede deshacer.</p>
+    </div>
+    <div class="roles-page__dialog-actions">
+        <p-button type="button" label="Cancelar" styleClass="p-button-text" (click)="closeDeleteDialog()"></p-button>
+        <p-button type="button" label="Eliminar" styleClass="p-button-danger" (click)="confirmDelete()"></p-button>
+    </div>
+</p-dialog>

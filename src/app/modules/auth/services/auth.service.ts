@@ -19,7 +19,8 @@ export class AuthService {
   public isLoggedIn = false;
 
   get currentUserValue(): any {
-    this.currentUserSubject.next(JSON.parse(localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER)));
+    const storedUser = localStorage.getItem(AppConstants.LOCAL_STORAGE_CURRENT_USER);
+    this.currentUserSubject.next(storedUser ? JSON.parse(storedUser) : null);
     return this.currentUserSubject.value;
   }
 
@@ -57,6 +58,8 @@ export class AuthService {
   }
 
   logout() {
+    this.isLoggedIn = false;
+    this.currentUserValue = null;
     localStorage.removeItem(AppConstants.LOCAL_STORAGE_CURRENT_USER);
     console.log('AuthService: logout: localStorage.removeItem(AppConstants.LOCAL_STORAGE_CURRENT_USER)');
     this.router.navigate(['/auth/login'], { queryParams: {} });
